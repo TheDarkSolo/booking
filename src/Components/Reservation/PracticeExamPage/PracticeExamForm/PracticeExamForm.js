@@ -219,13 +219,22 @@ const PracticeExamForm = () => {
       {notTheoryExam.length !== 0 ? <h2>{notTheoryExam}</h2> : null}
       <form className="fs-5" onSubmit={handleSubmit(handleSubmitPracticeExam)}>
         {userData.category === "B" && (<div class="form-group mb-3">
-          <label for="kpp-select" className="fs-5">Вид КПП</label>
+          <label for="kpp-select" className="fs-5">
+            {/* ВидКПП */}
+            {t("typeKPP")}
+          </label>
           <select class="form-select" id="kpp-select" onChange={(e) => onChangeSelectKPP(e.target.value)}>
-            {<option selected disabled value="MT">Выберите КПП</option>}
-            <option value="MT">Механика</option>
+            {<option selected disabled value="MT">
+              {/* Выберите КПП */}
+
+              {t("selectKPP")}</option>}
+            <option value="MT">Механика </option>
             <option value="AT">Автомат</option>
           </select>
-          <small class="text-danger fs-5">Пожалуйста, выберите указанный при регистрации вид КПП.</small>
+          <small class="text-danger fs-5">
+            {/* Пожалуйста, выберите указанный при регистрации вид КПП. */}
+            {t("warningKPP")}
+          </small>
         </div>)}
         <div class="form-group mb-3">
           {/* SELECT DATE */}
@@ -242,12 +251,18 @@ const PracticeExamForm = () => {
           />
           {/* ERROR*/}
           {errors?.selectDate && (
-            <small class="text-danger">Выберите дату и время.</small>
+            <small class="text-danger">
+              {/* Выберите дату и время. */}
+              {t("selectDate")}
+            </small>
             // <p className="error_text text-danger my-2">Выберите дату и время</p>
           )}
           {/* ERROR */}
           {dateError ? (
-            <small class="text-danger">К сожалению на текущий день записи нет.</small>
+            <small class="text-danger">
+              {/* К сожалению на текущий день записи нет. */}
+              {t("notFoundRecord")}
+            </small>
             // <p className="fs-5 my-2 text-danger">К сожалению в текущий день нету записей</p>
           ) : null}
         </div>
@@ -261,19 +276,22 @@ const PracticeExamForm = () => {
             disabled={date === "" || time?.length === 0}
             onChange={(e) => onChangeSelectTime(e.target.value)}
           >
-            <option value="">Выберите время</option>
+            <option value="">
+              {/* Выберите время */}
+              {t("selectTime")}
+            </option>
             {time?.map((time) => (
               <option key={time.id}>{time.time}</option>
             ))}
           </select>
         </div>
         <div class="form-group text-center">
-          <button className="btn btn-danger mx-5" onClick={() => reset()}>Отмена</button>
+          <button className="btn btn-danger mx-5" onClick={() => reset()}>{/* Отмена */}{t("cancel")}</button>
           <button
             className="btn btn-success mx-5"
             type="submit"
             disabled={examId === null}
-          >Подтвердить</button>
+          >{/* Подтвердить */} {t("approve")}</button>
         </div>
       </form>
       {loading && <ModalLoading isLoading={loading} />}

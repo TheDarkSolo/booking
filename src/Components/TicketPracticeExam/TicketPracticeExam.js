@@ -27,8 +27,17 @@ export default function TicketPracticeExam() {
     setTime(timeWithoutSeconds)
   }, []);
   const downloadPdf = () => {
-    html2pdf(document.getElementById('ticket'))
+
+    const content = document.getElementsByTagName('html')[0].cloneNode(true);
+    const btn = content.getElementsByClassName('btn btn-success')[0];
+    const header = content.getElementsByClassName('header_logo_lang')[0];
+    const lang = content.getElementsByClassName('lang')[0];
+    const center = content.getElementsByTagName('center')[0];
+    center.removeChild(btn);
+    header.removeChild(lang);
+    html2pdf(content);
   }
+
   return (
     <>
       <div className="offset_ticket_theory_exam">
@@ -85,7 +94,10 @@ export default function TicketPracticeExam() {
           <p className="text-center text-danger">Сохраните этот талон</p>
         </div>
       </div>
-      <button onClick={downloadPdf} type="button" className="btn btn-success">Скачать PDF</button>
+      <br></br>
+      <center>
+        <button onClick={downloadPdf} type="button" className="btn btn-success">Скачать PDF</button>
+      </center>
     </>
   );
 }

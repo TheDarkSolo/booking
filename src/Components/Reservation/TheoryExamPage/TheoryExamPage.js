@@ -78,7 +78,7 @@ const TheoryExamPage = () => {
           setSearch(true);
         }
 
-        
+
       })
       .catch((error) => {
         // setSearch(false);
@@ -96,7 +96,7 @@ const TheoryExamPage = () => {
     setMessageBlock(true);
   };
 
-  useEffect(() => {}, []);
+  useEffect(() => { }, []);
 
   return (
     <div className="offset_theory_exam_page">
@@ -107,7 +107,7 @@ const TheoryExamPage = () => {
         <div className="d-flex w-100">
           <button className="btn_back" onClick={() => navigate(-1)}>
             <IoIosArrowBack />
-            назад
+            {t("goBack")}
           </button>
         </div>
         {!search ? (
@@ -159,10 +159,10 @@ const TheoryExamPage = () => {
                 size={40}
               />
 
-                <button className="btn btn-primary">
-                  Отправить снова
-                </button>
-                <button className="btn btn-success">Забронировать</button>
+              <button className="btn btn-primary">
+                {t("againOTP")}
+              </button>
+              <button className="btn btn-success">Забронировать</button>
             </div>
           </div>
         )}

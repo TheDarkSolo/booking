@@ -241,7 +241,7 @@ const PracticeExamPage = () => {
       <div className="d-flex w-100">
         <button className="btn_back" onClick={() => navigate(-1)}>
           <IoIosArrowBack />
-          назад
+          {t("goBack")}
         </button>
       </div>
       <div className="d-flex w-100 text-start align-items-center justify-content-center">
@@ -302,7 +302,7 @@ const PracticeExamPage = () => {
         // onSubmit={handleSubmit(submit)}
         >
           <p className="px-3 text-center">
-            Введите отправленный на ваш телефон номер код.
+            {t("enterOTP")}
           </p>
           {/* <input
             className="form-control w-50 mb-2"
@@ -351,14 +351,15 @@ const PracticeExamPage = () => {
               disabled={disBtn || OTP.length < 6}
             >
 
-              Забронировать
+              {/* Забронировать */}
+              {t("bron")}
             </button>
             <button
               className="btn mb-3 btn-light"
               onClick={() => SendMessageAgain()}
               disabled={!disBtn}
             >
-              Отправить код повторно
+              {t("againOTP")}
             </button>
             {/* COUNT DOWN TIMER */}
             <ReactCountdownClock

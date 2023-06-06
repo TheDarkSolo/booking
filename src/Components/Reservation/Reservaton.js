@@ -49,7 +49,7 @@ const Reservation = () => {
       <div className="d-flex w-100">
         <button className="btn_back" onClick={() => navigate(-1)}>
           <IoIosArrowBack />
-          назад
+          {t("goBack")}
         </button>
       </div>
       <div className="d-flex flex-column py-5  w-100 align-items-center justify-content-center ">

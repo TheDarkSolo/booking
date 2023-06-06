@@ -13,35 +13,6 @@ import { useDispatch } from "react-redux";
 const Reservation = () => {
 
   const dispatch = useDispatch()
-  const getToken = () => {
-    let myHeaders = new Headers();
-    myHeaders.append("Accept", "application/json");
-    myHeaders.append("Content-Type", "application/json");
-
-    let raw = JSON.stringify({
-      "username": "admin",
-      "password": "admin"
-    });
-
-    var requestOptions = {
-      method: 'POST',
-      headers: myHeaders,
-      body: raw,
-      redirect: 'follow',
-      mode: "no-cors"
-    };
-
-    fetch("http://booking.gov4c.kz/api/auth/token/", {
-      method: 'POST',
-      headers: myHeaders,
-      body: raw
-      // mode: "no-cors"
-    })
-      .then(response => response.text())
-      .then(result => dispatch(setToken(JSON.parse(result))))
-      .catch(error => console.log('error', error));
-  }
-
   const { t } = useTranslation()
   const navigate = useNavigate()
   return (

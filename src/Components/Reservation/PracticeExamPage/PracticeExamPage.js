@@ -55,6 +55,7 @@ const PracticeExamPage = () => {
   const [notPassExam, setNotPassExam] = useState(false);
   //SHOW ERROR IF APPLICANT INPUT WRONG VERIFY CODE
   const [isWrongCode, setIsWrongCode] = useState(false);
+  const [isWrongIIN, setIsWrongIIN] = useState(false);
   const [OTP, setOTP] = useState("");
 
   //show error if user has already active ticket
@@ -114,6 +115,9 @@ const PracticeExamPage = () => {
           //SHOW INPUT OTP TO VERIFY CODE
           setMessageBlock(true);
         }
+        else if (result.error) {
+          setIsWrongIIN(true);
+        }
         //APLICANT NOT FOUND
         else {
           setMessageBlock(false)
@@ -167,7 +171,7 @@ const PracticeExamPage = () => {
             setMessageBlock(false)
             setNotPassExam(true);
             setOTP("");
-            console.log(data.error);
+            //console.log(data.error);
             // console.log(data)
           }
         }
@@ -272,9 +276,9 @@ const PracticeExamPage = () => {
 
             {/* ERROR NOT FOUND TICKTET */}
             {isUser && (
-              <p className="text-danger my-2">Заявитель с таким ИИН не найден.</p>
+              <p className="text-danger my-2">{t("notIINFound")}</p>
             )}
-
+            {isWrongIIN && <p className="text-danger fs-3">{t("wrongIIN")}</p>}
 
             {/* ERROR IF USER BOOKIG FOR PRACTICE EXAM */}
 
@@ -342,7 +346,8 @@ const PracticeExamPage = () => {
 
           <h2 className="text-danger text-center">{notPassExam}</h2>
           {/* ERROR APPLICANT  */}
-          {isWrongCode && <p className="text-danger fs-3">Вы ввели некорректный код.</p>}
+          {isWrongCode && <p className="text-danger fs-3">{t("wrongOTP")}</p>}
+
           <div className="d-flex flex-column w-50 align-items-center justify-content-center w-100 mt-3">
             <button
               className="btn btn-success mb-5"

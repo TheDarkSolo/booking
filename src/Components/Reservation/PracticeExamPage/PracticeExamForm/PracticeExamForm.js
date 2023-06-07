@@ -29,7 +29,7 @@ const PracticeExamForm = () => {
   //SET EXAMID
   const [examId, setExamId] = useState(null);
   //SELECTED KPP IF APPLICANT HAVE CATEGORY "B"
-  const [kppApp, setKPP] = useState("");
+  const [kppApp, setKPP] = useState("MT");
   //SET ERROR WHEN SEND DATA AND TIME FOR RESERVATION
   const [errorText, setErrorText] = useState("");
   //SHOW ERROR IF APPLICANT NOT PASS THEORY EXAM
@@ -207,6 +207,9 @@ const PracticeExamForm = () => {
     const todayDate = new Date().toISOString().slice(0, 10);
     setToday(todayDate);
     //getFreeExamPractice(userData.department_code, token.access);
+    if (userData.category !== 'B') {
+      onChangeSelectKPP("MT");
+    }
   }, []);
   return (
     <div className="form_input_date_item">
@@ -236,6 +239,7 @@ const PracticeExamForm = () => {
             {t("warningKPP")}
           </small>
         </div>)}
+
         <div class="form-group mb-3">
           {/* SELECT DATE */}
           <label for="date-picker">{t("selectDate")}</label>

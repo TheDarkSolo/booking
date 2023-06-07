@@ -222,6 +222,11 @@ const PracticeExamPage = () => {
   };
 
   //SEND SMS CODE FROM APPLICANT TO CHECK
+  const verifyOTP = () => {
+    sendVerifyCodeApplicant(OTP, token.access);
+    if (isVerify)
+      submit();
+  }
   const submit = () => {
     setIsLoading(true);
     setTimeout(() => {
@@ -229,7 +234,7 @@ const PracticeExamPage = () => {
     }, 500);
 
     setMessageBlock(false);
-    sendVerifyCodeApplicant(OTP, token.access);
+    //sendVerifyCodeApplicant(OTP, token.access);
     reset();
   };
 
@@ -351,8 +356,8 @@ const PracticeExamPage = () => {
           <div className="d-flex flex-column w-50 align-items-center justify-content-center w-100 mt-3">
             <button
               className="btn btn-success mb-5"
-              type="submit"
-              onClick={submit}
+              type="button"
+              onClick={verifyOTP}
               disabled={disBtn || OTP.length < 6}
             >
 

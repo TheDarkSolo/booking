@@ -28,10 +28,14 @@ const Header = () => {
         <Link to="/">
           <img className="logo" src={logo} alt="logo" />
         </Link>
-        <div className="lang">
+        <select class="form-select form-select-lg" style={{width: '100px'}} aria-label="Default select example" onChange={(e) => onChangeLang(e.target.value)}>
+          <option value="kz">Қаз</option>
+          <option value="ru" selected>Рус</option>
+        </select>
+        {/* <div className="lang">
           <span className="lang_text" onClick={(e) => onChangeLang('kz')} >КАЗ</span>
           <span className="lang_text" onClick={(e) => onChangeLang('ru')}>РУС</span>
-        </div>
+        </div> */}
       </div>
       {
         isLoading && <ModalLoading isLoading={isLoading}/>

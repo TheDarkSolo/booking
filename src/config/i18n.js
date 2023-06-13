@@ -44,7 +44,7 @@ i18n.use(initReactI18next).init({
         ],
         btn_title_reservation_theory_exam:
           "Онлайн бронирование для сдачи теоретического экзамена",
-        btn_title_reservation_practce_exam:
+        btn_title_reservation_practice_exam:
           "Онлайн бронирование для сдачи практического экзамена",
         titlePageTheoryExam:
           "БРОНИРОВАТЬ ОЧЕРЕДЬ ДЛЯ СДАЧИ ТЕОРЕТИЧЕСКОГО ЭКЗАМЕНА",
@@ -69,7 +69,7 @@ i18n.use(initReactI18next).init({
         selectKPP: "Выберите КПП",
         hasActiveTicket: "У вас уже есть активный талон. Данные были высланы в виде SMS. Проверьте свои сообщения.",
         warningKPP: "Пожалуйста, выберите указанный при регистрации вид КПП.",
-        selectDate: "Выберите дату и время.",
+        selectDate: "Выберите дату",
         notFoundRecord: "К сожалению на текущий день записи нет.",
         selectTime: "Выберите время",
         approve: "Подтвердить",
@@ -77,6 +77,9 @@ i18n.use(initReactI18next).init({
         notIINFound: "Заявитель с таким ИИН не найден.",
         wrongOTP: "Вы ввели некорректный код.",
         wrongIIN: "Неверный ИИН",
+        instructionPDD: "Инструкция ПДД",
+        downloadKAZ: "Скачать на КАЗ",
+        downloadRUS: "Скачать на РУС",
       },
     },
     kz: {
@@ -109,14 +112,14 @@ i18n.use(initReactI18next).init({
           },
         ],
         btn_title_reservation_theory_exam: "Теориялық емтиханға онлайн тіркелу",
-        btn_title_reservation_practce_exam:
+        btn_title_reservation_practice_exam:
           "Практикалық емтиханға онлайн тіркелу",
-        titlePageTheoryExam: "ТЕОРИЯЛЫҚ ЕМТИХАН ӨТУ ҮШІН КЕЗЕГІН БРОНДАУ",
-        titlePagePracticeExam: "ПРАКТИКАЛЫҚ ЕМТИХАН ӨТУ ҮШІН КЕЗЕГІН БРОНДАУ",
+        titlePageTheoryExam: "ТЕОРИЯЛЫҚ ЕМТИХАН ӨТУ ҮШІН КЕЗЕКТІ БРОНДАУ",
+        titlePagePracticeExam: "ПРАКТИКАЛЫҚ ЕМТИХАН ӨТУ ҮШІН КЕЗЕКТІ БРОНДАУ",
         btn_title_reservation: "Авторизация",
         head_text_input:
-          "ЖСН-ді енгізіңіз. Сіздің телефон нөмеріңізге СМС-код жіберіледі.",
-        iin_input_placeholder: "ЖСН-ді енгізіңіз",
+          "ЖСН-ды енгізіңіз. Сіздің телефон нөмеріңізге СМС-код жіберіледі.",
+        iin_input_placeholder: "ЖСН-ды енгізіңіз",
         iin: "ЖСН",
         city: "Қала",
         department: "Бөлім",
@@ -133,14 +136,17 @@ i18n.use(initReactI18next).init({
         selectKPP: "БҚ(КПП) таңдаңыз",
         hasActiveTicket: "Сізде белсенді талон бар. Деректер SMS түрінде жіберілді. Хабарламаларыңызды тексеріңіз.",
         warningKPP: "Тіркелу кезінде көрсетілген берілістер қорабының түрін таңдаңыз.",
-        selectDate: "Дата мен уақытты таңдаңыз.",
+        selectDate: "Күнді таңдаңыз.",
         notFoundRecord: "Өкінішке орай таңдалған күнге жазба жоқ.",
         selectTime: "Уақытты таңдаңыз",
         approve: "Растау",
         cancel: "Болдырмау",
         notIINFound: "Бұндай ЖСН бар өтініш беруші табылмады.",
-        wrongOTP: "Сіз қате кодты енгізіңіз.",
+        wrongOTP: "Сіз қате кодты енгіздіңіз.",
         wrongIIN: "ЖСН қате",
+        instructionPDD: "ЖҚЕ нұсқауы",
+        downloadKAZ: "Қазақ тіліндегі нұсқауды жүктеу",
+        downloadRUS: "Орыс тіліндегі нұсқауды жүктеу",
       },
     },
   },

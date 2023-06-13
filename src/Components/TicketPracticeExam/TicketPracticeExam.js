@@ -7,7 +7,8 @@ export default function TicketPracticeExam() {
   const [time, setTime] = useState(null);
   const [examId, setExamId] = useState(null);
   const [kpp, setKpp] = useState(null);
-
+  const [category, setCategory] = useState(null);
+  const [department, setDepartment] = useState(null);
 
   useEffect(() => {
     const examId = sessionStorage.getItem("examId");
@@ -20,6 +21,11 @@ export default function TicketPracticeExam() {
     //GET DATE EXAM APPLICANT ENROLLED
     const date = sessionStorage.getItem("date");;
     setDate(JSON.parse(date));
+    const category = sessionStorage.getItem("category");
+    setCategory(JSON.parse(category));
+    const department = sessionStorage.getItem("department");
+    setDepartment(JSON.parse(department));
+
     //TRANSFORM TIME CUT SECONDS
     const time = JSON.parse(date);
     const [hours, minutes] = time.time.split(":");
@@ -52,14 +58,14 @@ export default function TicketPracticeExam() {
           <label className="my-2">
             <span className="ticket_text_aside">
               Отделение: <span className="fw-bold">
-                <span className="fw-bold">{user?.department}</span>
+                <span className="fw-bold">{department}</span>
               </span>
             </span>
           </label>
           <label className="my-2">
             <span className="ticket_text_aside">
               Категория: <span className="fw-bold">
-                <span className="fw-bold">{user?.category}</span>
+                <span className="fw-bold">{category}</span>
               </span>
             </span>
           </label>

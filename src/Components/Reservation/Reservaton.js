@@ -26,7 +26,9 @@ const Reservation = () => {
       <div className="d-flex flex-column py-5  w-100 align-items-center justify-content-center ">
         <Link className="link_btn_resev_exam" to="/reservation/practice-exam">
           <img src={reserv} className="w-25" />
-          <p className="w-75 mx-5">{t("btn_title_reservation_practce_exam")}</p>
+          <p className="w-75 mx-5">
+            {/* Авторизоваться */}
+            {t("btn_title_reservation_practice_exam")}</p>
         </Link>
       </div>
     </div>

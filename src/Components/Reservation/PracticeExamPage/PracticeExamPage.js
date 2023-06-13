@@ -293,6 +293,7 @@ const PracticeExamPage = () => {
               type="submit"
               disabled={!isDirty || !isValid}
             >
+              {/* Авторизоваться */}
               {t("btn_title_reservation")}
             </button>
           </form>
@@ -311,6 +312,7 @@ const PracticeExamPage = () => {
         // onSubmit={handleSubmit(submit)}
         >
           <p className="px-3 text-center">
+            {/* Введите отправленный на ваш телефон номер код. */}
             {t("enterOTP")}
           </p>
           {/* <input
@@ -399,8 +401,7 @@ const PracticeExamPage = () => {
       />
       <ModalTheoryExam notPassExam={notPassExam} setNotPassExam={setNotPassExam} />
 
-
-
+      {/* SHOW ACTIVE TICKET MODAL */}
       <ModalActiveTicket
         hasActiveTicket={hasActiveTicket}
         setHasActiveTicket={setHasActiveTicket}

@@ -29,7 +29,7 @@
   font-size: 52px;
   line-height: 50px;
   font-weight: bold;
-  color: #36975a;
+  /* color: #36975a; */
 }
 
 
@@ -138,4 +138,72 @@
     font-size: 32px;
     line-height: 32px;
   }
+}
+
+
+/* Basic styles for the footer */
+.footer-row {
+  width: 100%;
+  background-color: #ffffff; /* replace with your preferred color */
+  margin-bottom: 0;
+}
+
+.footer-row .row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 0 15%;
+}
+
+.header-row-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.logo2 {
+  height: 65px; /* replace with your preferred size */
+  width: 65px; /* replace with your preferred size */
+}
+
+.text {
+  margin-left: 0; /* remove the left margin */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: left;
+}
+
+.logo-text-block {
+  display: flex;
+  align-items: center;
+  gap: 20px; /* adjust this to control the spacing between the logo and the text */
+}
+
+
+.social {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  /* width: 150px; replace with your preferred size */
+}
+
+.call-center {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  /* width: 150px; replace with your preferred size */
+}
+
+.lonely-call {
+  font-size: 2em;
+  color: green;
+}
+
+.call-top-text {
+  font-size: 0.8em;
 }

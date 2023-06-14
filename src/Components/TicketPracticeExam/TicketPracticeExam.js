@@ -6,6 +6,7 @@ export default function TicketPracticeExam() {
   const [date, setDate] = useState(null);
   const [time, setTime] = useState(null);
   const [examId, setExamId] = useState(null);
+  const [appNumber, setAppNumber] = useState(null);
   const [kpp, setKpp] = useState(null);
   const [category, setCategory] = useState(null);
   const [department, setDepartment] = useState(null);
@@ -13,6 +14,8 @@ export default function TicketPracticeExam() {
   useEffect(() => {
     const examId = sessionStorage.getItem("examId");
     setExamId(JSON.parse(examId));
+    const appNumber = sessionStorage.getItem("appNumber");
+    setAppNumber(JSON.parse(appNumber));
     const kpp = sessionStorage.getItem("kpp");
     setKpp(JSON.parse(kpp));
     //GET INFO APPLICANT
@@ -37,7 +40,7 @@ export default function TicketPracticeExam() {
     const content = document.getElementsByTagName('html')[0].cloneNode(true);
     const btn = content.getElementsByClassName('btn btn-success')[0];
     const header = content.getElementsByClassName('header_logo_lang')[0];
-    const lang = content.getElementsByClassName('lang')[0];
+    const lang = content.getElementsByClassName('form-select form-select-lg')[0];
     const center = content.getElementsByTagName('center')[0];
     center.removeChild(btn);
     header.removeChild(lang);
@@ -48,7 +51,7 @@ export default function TicketPracticeExam() {
     <>
       <div className="offset_ticket_theory_exam">
         <div id="ticket" className="d-flex flex-column h-50 w-75 border rounded border-dark p-4">
-          <h3 className="text-center">Цифровой талон № {examId}</h3>
+          <h3 className="text-center">Цифровой талон № {appNumber}</h3>
           <label className="my-2">
             <span className="ticket_text_aside">
               ИИН: <span className="fw-bold">{user?.iin}</span>

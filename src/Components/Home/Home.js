@@ -102,8 +102,14 @@ export default function Home() {
                 <img className="logo2" src={logo} alt="logo" />
               </Link>
               <div className="text">
-                <span>НАО «Государственная корпорация»</span>
-                <span>«Правительство для граждан»</span>
+                <span>
+                  {/* НАО «Государственная корпорация» */}
+                  {t("stateCorp")}
+                </span>
+                <span>
+                  {/* «Правительство для граждан» */}
+                  {t("gov4c")}
+                </span>
               </div>
             </div>
 
@@ -137,8 +143,15 @@ export default function Home() {
             <div className="call-center">
               <p className="lonely-call">1414</p>
               <div className="text">
-                Единый контакт-центр<br></br>
-                <span>(Звонок бесплатный)</span>
+                {/* Единый контакт-центр */}
+                {t("callCenter")}
+
+                <br></br>
+                <span>
+                  {/* (Звонок бесплатный) */}
+                  {t("callFree")}
+
+                </span>
               </div>
             </div>
 

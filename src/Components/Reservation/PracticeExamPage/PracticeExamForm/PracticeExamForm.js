@@ -39,8 +39,6 @@ const PracticeExamForm = () => {
 
   //GET APPLICANT INFO FROM REDUX
   const userData = useSelector((state) => state.userData.userData);
-  const token = useSelector(state => state.token.token)
-
   //NEW MENUS
   const [cities, setCities] = useState([]);
   const [departments, setDepartments] = useState([]);
@@ -48,7 +46,7 @@ const PracticeExamForm = () => {
   const [departmentId, setDepartmentId] = useState(userData.department_id);
   const [category, setCategory] = useState(userData.category);
   const [city, setCity] = useState(userData.city);
-
+  const [dateBlock, setDateBlock] = useState(false);
   const {
     register,
     handleSubmit,
@@ -61,6 +59,41 @@ const PracticeExamForm = () => {
     IIN: "",
     mode: "onChange",
   });
+  //SELECT CITY
+  const onChangeCity = (value) => {
+    setCity(value);
+    const filteredDepartments = departments.filter((department) => department.city == value);
+    if (filteredDepartments.length > 0) {
+      setDepartmentId(filteredDepartments[0].id);
+    }
+  }
+  //SELECT DEPARTMENT
+  const onChangeSelectDepartment = (value) => {
+    setDepartmentId(value);
+  }
+  //SELECT CATEGORY
+  const onChangeSelectCategory = (value) => {
+    setCategory(value);
+  }
+
+  //SELECT KPP
+  const onChangeSelectKPP = (value) => {
+    setKPP(value);
+    // Вызов функции getFreeExamPractice при выборе опции селектора "AT" или "MT"
+    if (value === "AT" || value === "MT") {
+      getFreeExamPractice(value);
+    }
+
+  };
+  //SHOW SELECTORS OF DATE AND TIME
+  const dateButtonClick = () => {
+    setDateBlock(true);
+    getFreeExamPractice(kppApp);
+    document.getElementById('category-select').disabled = true;
+    document.getElementById('city-select').disabled = true;
+    document.getElementById('department-select').disabled = true;
+    document.getElementById('chooseDateBtn').hidden = true;
+  }
 
   //SELECT DATE
   const onChangeSelectDate = (value) => {
@@ -90,31 +123,69 @@ const PracticeExamForm = () => {
     setExamId(obj[0]?.id);
   };
 
-  const onChangeCity = (value) => {
-    setCity(value);
-  }
+  //APPLICANT SELECTED DATE AND TIME SEND DATA
+  const handleSubmitPracticeExam = () => {
+    const obj = {
+      user_id: userData.id,
+      exam_id: examId,
+      department_id: departmentId,
+      category: category,
+      kpp: kppApp,
+    };
 
+    postUserExamData(obj);
+    setLoading(true);
+    sessionStorage.setItem("examId", JSON.stringify(examId));
+    sessionStorage.setItem("kpp", JSON.stringify(kppApp));
+    sessionStorage.setItem("category", JSON.stringify(category));
+    const department = departments.find((department) => department.id == departmentId);
+    sessionStorage.setItem("department", JSON.stringify(department.name));
+    //LOADING ANIMATE
+    setTimeout(() => {
+      setLoading(false);
+    }, 500);
+    reset();
+  };
 
+  //fetches
+  // ===========NEW DROPDOWN MENU FUNCTIONS========================
+  //GET CITIES
+  const fetchCities = async () => {
+    const url = "https://bback.gov4c.kz/api/cities";
+    const token = userData.token;
+    const response = await fetch(url, {
+      headers: {
+        Authorization: "Bearer " + token,
+        "Content-Type": "application/json",
+      },
+    });
+    const data = await response.json();
+    setCities(data);
+  };
+
+  //GET DEPARTMENTS
+  const fetchDepartments = async () => {
+    const url = "https://bback.gov4c.kz/api/departments";
+    const token = userData.token;
+    const response = await fetch(url, {
+      headers: {
+        Authorization: "Bearer " + token,
+        "Content-Type": "application/json",
+      },
+    });
+    const data = await response.json();
+    setDepartments(data);
+  };
 
   //GET FREE PRACTICE EXAM
-  const getFreeExamPractice = async (id_depart, kpp) => {
+  const getFreeExamPractice = async (kpp) => {
     const url = "https://bback.gov4c.kz/api/practice/free/exams/";
-    //const kpp = kppApp !== "" ? kppApp : 'MT';
     const iin = sessionStorage.getItem("iin").replace(/[^0-9]/g, "");
     const token = userData.token;
-    //console.log(token);
-    //console.log(iin);
-    //  console.log("iin:" + iin + ", id:"+id+", categoryName:"+categoryName+", kpp:"+kpp + ", );
-    //  console.log("iin" + iin);
-    //  console.log("id" + id);
     fetch(url, {
       headers: {
         Authorization: "Bearer " + token,
         "Content-Type": "application/json",
-        /*"Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Headers": "Content-Type",
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Methods": "OPTIONS,POST,GET,PATCH",*/
       },
       method: "POST",
       body: JSON.stringify({
@@ -143,54 +214,6 @@ const PracticeExamForm = () => {
       .catch(function (res) { });
   };
 
-  // ===========NEW DROPDOWN MENU FUNCTIONS========================
-  const fetchCities = async () => {
-    const url = "https://bback.gov4c.kz/api/cities";
-    const token = userData.token;
-    const response = await fetch(url, {
-      headers: {
-        Authorization: "Bearer " + token,
-        "Content-Type": "application/json",
-      },
-    });
-    const data = await response.json();
-    setCities(data);
-  };
-
-  const fetchDepartments = async () => {
-    const url = "https://bback.gov4c.kz/api/departments";
-    const token = userData.token;
-    const response = await fetch(url, {
-      headers: {
-        Authorization: "Bearer " + token,
-        "Content-Type": "application/json",
-      },
-    });
-    const data = await response.json();
-    setDepartments(data);
-  };
-
-
-  //SELECT KPP
-  const onChangeSelectKPP = (value) => {
-    setKPP(value);
-
-    // Вызов функции getFreeExamPractice при выборе опции селектора "AT" или "MT"
-    if (value === "AT" || value === "MT") {
-      getFreeExamPractice(userData.department_code, value);
-    }
-
-  };
-
-  const onChangeSelectDepartment = (value) => {
-    setDepartmentId(value);
-  }
-
-  const onChangeSelectCategory = (value) => {
-    setCategory(value);
-  }
-
-
   //POST DATA TO SERVER AFTER CHOISE APPLICANT DATE AND TIME
   const postUserExamData = (user_exam_data) => {
     const url = "https://bback.gov4c.kz/api/practice/enroll/queue/";
@@ -214,6 +237,7 @@ const PracticeExamForm = () => {
       .then((res) => {
         //IF APPLICANT ENROLLED TO PRACTICE EXAM
         if (res.enrolled) {
+          sessionStorage.setItem("appNumber", JSON.stringify(res.app_number));
           navigate("/reservation/practice-exam/ticket");
         }
         //APPLICANT NOT ENRLLED GET ERROR FROM SERVER
@@ -226,31 +250,6 @@ const PracticeExamForm = () => {
       });
   };
 
-  //APPLICANT SELECTED DATE AND TIME SEND DATA
-  const handleSubmitPracticeExam = () => {
-    const obj = {
-      user_id: userData.id,
-      exam_id: examId,
-      department_id: departmentId,
-      category : category,
-      kpp: kppApp,
-    };
-
-    postUserExamData(obj);
-    setLoading(true);
-    sessionStorage.setItem("examId", JSON.stringify(examId));
-    sessionStorage.setItem("kpp", JSON.stringify(kppApp));
-    sessionStorage.setItem("category", JSON.stringify(category));
-    const department = departments.find((department) => department.id == departmentId);
-    sessionStorage.setItem("department", JSON.stringify(department.name));
-    //LOADING ANIMATE
-    setTimeout(() => {
-      setLoading(false);
-    }, 500);
-    reset();
-  };
-
-  // const userData = JSON.parse(sessionStorage.getItem("user"))
   useEffect(() => {
     const todayDate = new Date().toISOString().slice(0, 10);
     setToday(todayDate);
@@ -258,20 +257,13 @@ const PracticeExamForm = () => {
     if (userData.category !== 'B') {
       onChangeSelectKPP("MT");
     }
-
     // Fetching data for dropdowns // NEW MENU FUNCTIONS
     fetchCities();
     fetchDepartments();
-    //setCity();
-
   }, []);
-
-
-
-
-
   //END OF NEW MENU FUNCTIONS
 
+  //HTML
   return (
     <div className="form_input_date_item">
       {/* SHOW APPLICANT INFO */}
@@ -283,36 +275,11 @@ const PracticeExamForm = () => {
       {notTheoryExam.length !== 0 ? <h2>{notTheoryExam}</h2> : null}
 
       <form className="fs-5" onSubmit={handleSubmit(handleSubmitPracticeExam)}>
-        {userData.category === "B" && (<div class="form-group mb-3">
-          <label for="kpp-select" className="fs-5">
-            {/* ВидКПП */}
-            {t("typeKPP")}
-          </label>
-          <select class="form-select" id="kpp-select" onChange={(e) => onChangeSelectKPP(e.target.value)}>
-            {<option selected disabled value="MT">
-
-              {/* Выберите КПП */}
-              {t("selectKPP")}</option>}
-            <option value="MT">Механика </option>
-            <option value="AT">Автомат</option>
-          </select>
-
-          <small class="text-danger fs-5">
-            Пожалуйста, выберите указанный при регистрации вид КПП.
-            {/* {t("warningKPP")} */}
-          </small>
-
-
-        </div>)
-        }
-
-
-
         {/* ================SELECT CITY================ */}
         <div class="form-group mb-3">
           <label for="city-select">
-            Выберите город
-            {/* {t("selectCity")} */}
+            {/*Выберите город*/}
+            {t("selectCity")}
           </label>
           <select class="form-select" id="city-select" onChange={(e) => onChangeCity(e.target.value)}>
             {cities.map((city) => (
@@ -324,8 +291,8 @@ const PracticeExamForm = () => {
         {/* ================SELECT DEPARTMENT================ */}
         <div class="form-group mb-3">
           <label for="department-select">
-            Выберите департамент
-            {/* {t("selectDepartment")} */}
+            {/*Выберите департамент*/}
+            {t("selectDepartment")}
 
           </label>
           <select class="form-select" id="department-select" onChange={(e) => onChangeSelectDepartment(e.target.value)}>
@@ -335,7 +302,7 @@ const PracticeExamForm = () => {
                 <option
                   key={department.id}
                   value={department.id}
-                  selected={department.id == userData.department_id}
+                /*selected={department.id == userData.department_id}*/
                 >
                   {department.name}
                 </option>
@@ -350,84 +317,116 @@ const PracticeExamForm = () => {
 
         <div class="form-group mb-3">
           <label for="category-select" className="fs-5">
-            Выберите категорию
-            {/* {t("selectCategory")} */}
+            {/*Выберите категорию*/}
+            {t("selectCategory")}
           </label>
           <select class="form-select" id="category-select" {...register("selectCategory", { required: true })} onChange={(e) => onChangeSelectCategory(e.target.value)}>
             {categories.map((category) => (
               <option value={category} selected={category == userData.category}>{category}</option>
             ))}
           </select>
-
           {/* <small class="text-danger fs-5">
             Предупреждение категория
              {t("warningCategory")} 
         </small> */}
-
         </div>
 
-        {/* ===========ВЫБЕРИТЕ ДАТУ============== */}
-
-        <div class="form-group mb-3">
-          {/* SELECT DATE */}
-          <label for="date-picker">{t("selectDate")}</label>
-          <input
-            id="date-picker"
-            className="form-control form-group-lg"
-            {...register("selectDate", { required: true })}
-            type="date"
-            min={today || dateList[0]?.date}
-            max={dateList[dateList.length - 1]?.date}
-            disabled={dateList.length === 0}
-            onChange={(e) => onChangeSelectDate(e.target.value)}
-          />
-          {/* ERROR*/}
-          {errors?.selectDate && (
-            <small class="text-danger">
-              {/* Выберите дату*/}
-              {t("selectDate")}
-            </small>
-            // <p className="error_text text-danger my-2">Выберите дату и время</p>
-          )}
-          {/* ERROR */}
-          {dateError ? (
-            <small class="text-danger">
-              {/* К сожалению на текущий день записи нет. */}
-              {t("notFoundRecord")}
-            </small>
-            // <p className="fs-5 my-2 text-danger">К сожалению в текущий день нету записей</p>
-          ) : null}
-        </div>
-
-        {/* ================ВЫБЕРИТЕ ВРЕМЯ============== */}
-
-        <div class="form-group mb-5">
-          {/* SELECT TIME */}
-          <label for="time-select">{t("time")}</label>
-          <select
-            id="time-select"
-            className="form-select"
-            {...register("selectTime", { required: true })}
-            disabled={date === "" || time?.length === 0}
-            onChange={(e) => onChangeSelectTime(e.target.value)}
-          >
-            <option value="">
-              {/* Выберите время */}
-              {t("selectTime")}
-            </option>
-            {time?.map((time) => (
-              <option key={time.id}>{time.time}</option>
-            ))}
+        {category === "B" && (<div class="form-group mb-3">
+          <label for="kpp-select" className="fs-5">
+            {/* ВидКПП */}
+            {t("typeKPP")}
+          </label>
+          <select class="form-select" id="kpp-select" onChange={(e) => onChangeSelectKPP(e.target.value)}>
+            {<option selected disabled value="MT">
+              {/* Выберите КПП */}
+              {t("selectKPP")}</option>}
+            <option value="MT">Механика </option>
+            <option value="AT">Автомат</option>
           </select>
-        </div>
-        <div class="form-group text-center">
-          <button className="btn btn-danger mx-5" onClick={() => reset()}>{/* Отмена */}{t("cancel")}</button>
+
+          <small class="text-danger fs-5">
+            {/*Пожалуйста, выберите указанный при регистрации вид КПП.*/}
+             {t("warningKPP")}
+          </small>
+        </div>)
+        }
+
+        {/*Выбрать дату*/}
+        <center>
           <button
-            className="btn btn-success mx-5"
-            type="submit"
-            disabled={examId === null}
-          >{/* Подтвердить */} {t("approve")}</button>
-        </div>
+            className="btn btn-success my-2"
+            id="chooseDateBtn"
+            type="button"
+            onClick={dateButtonClick}
+          >
+            {/*Выбрать дату и время*/}
+            {t("selectDateButton")}
+          </button>
+        </center>
+        {/* ===========ВЫБЕРИТЕ ДАТУ============== */}
+        {dateBlock && (
+          <div className="date">
+            <div class="form-group mb-3">
+              {/* SELECT DATE */}
+              <label for="date-picker">{t("selectDate")}</label>
+              <input
+                id="date-picker"
+                className="form-control form-group-lg"
+                {...register("selectDate", { required: true })}
+                type="date"
+                min={today || dateList[0]?.date}
+                max={dateList[dateList.length - 1]?.date}
+                disabled={dateList.length === 0}
+                onChange={(e) => onChangeSelectDate(e.target.value)}
+              />
+              {/* ERROR*/}
+              {errors?.selectDate && (
+                <small class="text-danger">
+                  {/* Выберите дату*/}
+                  {t("selectDate")}
+                </small>
+                // <p className="error_text text-danger my-2">Выберите дату и время</p>
+              )}
+              {/* ERROR */}
+              {dateError ? (
+                <small class="text-danger">
+                  {/* К сожалению на текущий день записи нет. */}
+                  {t("notFoundRecord")}
+                </small>
+                // <p className="fs-5 my-2 text-danger">К сожалению в текущий день нету записей</p>
+              ) : null}
+            </div>
+
+            {/* ================ВЫБЕРИТЕ ВРЕМЯ============== */}
+
+            <div class="form-group mb-5">
+              {/* SELECT TIME */}
+              <label for="time-select">{t("time")}</label>
+              <select
+                id="time-select"
+                className="form-select"
+                {...register("selectTime", { required: true })}
+                disabled={date === "" || time?.length === 0}
+                onChange={(e) => onChangeSelectTime(e.target.value)}
+              >
+                <option value="">
+                  {/* Выберите время */}
+                  {t("selectTime")}
+                </option>
+                {time?.map((time) => (
+                  <option key={time.id}>{time.time}</option>
+                ))}
+              </select>
+            </div>
+            <div class="form-group text-center">
+              <button className="btn btn-danger mx-5" onClick={() => reset()}>{/* Отмена */}{t("cancel")}</button>
+              <button
+                className="btn btn-success mx-5"
+                type="submit"
+                disabled={examId === null}
+              >{/* Подтвердить */} {t("approve")}</button>
+            </div>
+          </div>)}
       </form >
       {loading && <ModalLoading isLoading={loading} />}
     </div >

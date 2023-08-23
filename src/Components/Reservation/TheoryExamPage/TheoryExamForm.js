@@ -100,14 +100,6 @@ const TheoryExamForm = () => {
     setCategory(value);
   }
 
-  // //SELECT KPP
-  // const onChangeSelectKPP = (value) => {
-  //   setKPP(value);
-  //   // Вызов функции getFreeExamPractice при выборе опции селектора "AT" или "MT"
-  //   // if (value === "AT" || value === "MT") {
-  //   //   getFreeExamPractice(value);
-  //   // }
-  // };
   //SHOW SELECTORS OF DATE AND TIME
   const dateButtonClick = () => {
 
@@ -160,8 +152,6 @@ const TheoryExamForm = () => {
     postUserExamData(obj);
     setLoading(true);
     sessionStorage.setItem("examId", JSON.stringify(examId));
-    // sessionStorage.setItem("kpp", JSON.stringify(kppApp));
-    //sessionStorage.setItem("category", JSON.stringify(category));
     const department = departments.find((department) => department.id == departmentId);
     sessionStorage.setItem("department", JSON.stringify(department.name));
     sessionStorage.setItem("address", JSON.stringify(department.address));
@@ -203,43 +193,6 @@ const TheoryExamForm = () => {
     setDepartments(data);
   };
 
-  //GET FREE THEORY EXAM
-  // const getFreeExamTheory = async (kpp) => {
-  //   const url = "/api/t1/theory/exams/";
-  //   const iin = sessionStorage.getItem("iin").replace(/[^0-9]/g, "");
-  //   const token = userData.token;
-  //   fetch(url, {
-  //     headers: {
-  //       Authorization: "Bearer " + token,
-  //       "Content-Type": "application/json",
-  //     },
-  //     method: "POST",
-  //     body: JSON.stringify({
-  //       "iin": iin,
-  //       "department_id": departmentId,
-  //       // "category": category,
-  //       "kpp": kpp,
-  //     }),
-  //   })
-  //     .then((response) => {
-  //       if (response.ok) {
-  //         return response.json();
-  //       } else {
-  //         throw new Error(`Request failed with status code ${response.status}`);
-  //       }
-  //     })
-  //     .then((data) => {
-  //       if (data.length === 0) {
-  //         setDateError(true);
-  //         setDateList(data);
-  //       } else {
-  //         setDateError(false);
-  //         setDateList(data);
-  //       }
-  //     })
-  //     .catch(function (res) { });
-  // };
-
   const getFreeExamTheory = async () => {
     const iin = sessionStorage.getItem("iin").replace(/[^0-9]/g, "");
     const department_id = departmentId;
@@ -274,44 +227,6 @@ const TheoryExamForm = () => {
     }
   };
 
-
-  //POST DATA TO SERVER AFTER CHOISE APPLICANT DATE AND TIME
-  // const postUserExamData = (user_exam_data) => {
-  //   const url = "/api/practice/enroll/queue/";
-  //   const token = userData.token;
-  //   fetch(url, {
-  //     headers: {
-  //       Authorization: "Bearer " + token,
-  //       "Content-Type": "application/json",
-  //     },
-  //     method: "POST",
-  //     body: JSON.stringify(user_exam_data),
-  //   })
-  //     .then((response) => {
-  //       if (response.ok) {
-  //         return response.json();
-  //       } else {
-  //         setErrorText(response.status);
-  //         throw new Error(`Request failed with status code ${response.status}`);
-  //       }
-  //     })
-  //     .then((res) => {
-  //       //IF APPLICANT ENROLLED TO EXAM
-  //       if (res.enrolled) {
-  //         sessionStorage.setItem("appNumber", JSON.stringify(res.app_number));
-  //         // navigate("/reservation/practice-exam/ticket");
-  //         navigate("/reservation/practice-exam/verification");
-  //       }
-  //       //APPLICANT NOT ENRLLED GET ERROR FROM SERVER
-  //       else if (res.error) {
-  //         setNotTheoryExam(res.error);
-  //       }
-  //     })
-  //     .catch(function (res) {
-  //       setErrorText(res);
-  //     });
-  // };
-
   const postUserExamData = (user_exam_data) => {
     navigate("/reservation/theory-exam/verification");
   };
@@ -319,11 +234,6 @@ const TheoryExamForm = () => {
   useEffect(() => {
     const todayDate = new Date().toISOString().slice(0, 10);
     setToday(todayDate);
-    //getFreeExamPractice(userData.department_code, token.access);
-    // if (userData.category !== 'B') {
-    //   onChangeSelectKPP("MT");
-    // }
-    // Fetching data for dropdowns // NEW MENU FUNCTIONS
     fetchCities();
     fetchDepartments();
   }, []);
@@ -379,9 +289,7 @@ const TheoryExamForm = () => {
                   {department.name}
                 </option>
               ))}
-            {/*departments.map((department) => (
-              <option key={department.id} value={department.id} selected={department.id == userData.department_id}>{department.name}</option>
-            ))*/}
+
           </select>
         </div>
 
@@ -424,16 +332,6 @@ const TheoryExamForm = () => {
                   </option>
                 ))}
               </select>
-
-              {/* ERROR*/}
-              {/* {errors?.selectDate && ( */}
-              {/* // <small class="text-danger"> */}
-              {/* Выберите дату*/}
-              {/* {t("selectDate")} */}
-              {/* </small> */}
-              {/* // <p className="error_text text-danger my-2">Выберите дату и время</p> */}
-              {/* // )} */}
-              {/* ERROR */}
 
 
               {dateError ? (

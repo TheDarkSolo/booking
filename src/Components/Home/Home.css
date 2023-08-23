@@ -26,9 +26,10 @@
 
 .header_text {
   font-family: "Montserrat";
-  font-size: 52px;
-  line-height: 50px;
+  font-size: 30px;
+  line-height: 30px;
   font-weight: bold;
+  text-align: center;
   /* color: #36975a; */
 }
 

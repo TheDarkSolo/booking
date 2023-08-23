@@ -1,174 +1,447 @@
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 
-import TheoryExamForm from "./TheoryExamForm/TheoryExamForm";
+//COMPONENTS
 import ModalLoading from "../ModalLoading/ModalLoading";
-import ModalTheoryExam from "../../Modal/ModalTheoryExam";
-
-import { setData } from "../../../store/slices/ReservationTheoryData";
-import { setDataUser } from "../../../store/slices/userDataSlice";
-import { IoIosArrowBack } from "react-icons/io";
-
+import ModalPracticeError from "../../Modal/ModalPracticeError";
+import ModalCongratPractice from "../../Modal/ModalCongratPractice";
 import ReactCountdownClock from "react-countdown-clock";
-
+import ErrorVerifyPage from "../../ErrorPage/ErrorVerifyPage";
+//import ModalAppNumberError from "../../Modal/ModalAppNumberError";
+import OTPInput, { ResendOTP } from "otp-input-react";
+import TheoryExamForm from "./TheoryExamForm";
+import ModalActiveTicket from "../../Modal/ModalActiveTicket";
 import "./TheoryExamPage.css";
 
+//REDUX
+import { setDataUser } from "../../../store/slices/userDataSlice";
+
+//ICON
+import { IoIosArrowBack } from "react-icons/io";
+
+//API REQUEST FUNCTION
+import {
+  verifyUserByIIN,
+  verifySMSCode,
+} from "../../../helpers/ApiRequestList";
+
 const TheoryExamPage = () => {
-  // TRANSLATE
+  //USE TRANSLATE LANG
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const [examData, setExamData] = useState(null);
 
-  const [search, setSearch] = useState(false);
+  //SHOW FORM SELECT DATE AND TIME FOR EXAM AFTER VERIFY APPLICANT
+  const [isVerify, setIsVerify] = useState(false);
+  //SHOW LOADING ANIMATION MODAL
   const [isloading, setIsLoading] = useState(false);
+  //IF APPLICANT NOT FOUND SHOW ERROR
   const [isUser, setIsUser] = useState(false);
-  const [isReserv, setIsReserv] = useState(false);
+
+  //SHOW MODALS
+  const [congartModal, setCongartModal] = useState(false);
+  const [isTheoryResModal, setIsTheoryResModal] = useState(false);
+
+  //TOOGLE SHOW INPUT VERIFY CODE
   const [messageBlock, setMessageBlock] = useState(false);
+  //SECONDS FOR TIMER
+  const [seconds, setSeconds] = useState(180);
+  //FOR DISABLED BUTTON IF TIMER OUT OF TIME
+  const [disBtn, setDisBtn] = useState(false);
+  //SHOW ERROR IF APPLICANT NOT PASS THEORY EXAM
+  const [notPassExam, setNotPassExam] = useState(false);
 
-  // const data = useSelector((state) => state.data.data);
-  const dispatch = useDispatch();
+  //SHOW ERROR IF APPLICANT INPUT WRONG VERIFY CODE
+  const [isWrongCode, setIsWrongCode] = useState(false);
+  const [isWrongIIN, setIsWrongIIN] = useState(false);
+  const [OTP, setOTP] = useState("");
 
-  const userData = useSelector((state) => state.userData.userData);
+  //show error if user has already active ticket
+  const [hasActiveTicket, setHasActiveTicket] = useState(false);
+
+  //show error if user has expired application number
+  const [expiredAppNumber, setExpiredAppNumber] = useState(false);
+  const [responseError, setResponseError] = useState(false);
+
+  //bmgNote hide
+  const [isTextVisible, setIsTextVisible] = useState(true);
+
+  const token = useSelector(state => state.token.token)
+
   const {
     register,
     handleSubmit,
     reset,
-    setValue,
     formState: { errors, isDirty, isValid },
   } = useForm({
     IIN: "",
+    APP_NUMBER: "",
     mode: "onChange",
+    message: "",
   });
 
-  const goBack = () => {
-    navigate("/reservation/theory-exam");
-  };
+  const dispatch = useDispatch();
+  const { btoa } = window;
+  //SEND IIN TO DATABASE TO VERIFY USER
+  const verifyUser = async (iin, app_number, token) => {
 
-  const getUserData = async (data) => {
-    const username = "admin";
-    const password = "admin";
+    var requestOptions = {
+      method: 'GET', /*headers: myHeaders, */
+      redirect: 'follow'
+    };
 
-    fetch(`/api/search/applicant/${data.IIN}`, {
-      method: "GET",
-      headers: {
-        Authorization: "Basic " + btoa(username + ":" + password),
-        "Access-Control-Allow-Headers": "Content-Type",
-        "Access-Control-Allow-Origin": "*",
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Methods": "OPTIONS,POST,GET,PATCH",
-      },
-    })
-      .then((response) => {
+    fetch("/api/t1/theory/verify/" + iin + "/", requestOptions)
+      .then(response => {
         if (response.ok) {
           return response.json();
         } else {
           throw new Error(`Request failed with status code ${response.status}`);
         }
       })
-      .then((data) => {
-        if (data.find === false) {
-          setIsUser(true);
-          setSearch(false);
-        } else if (data.statusT === true && data.statusP === false) {
-          setIsReserv(true);
-        } else {
-          dispatch(setDataUser(data));
-          setSearch(true);
+      .then(result => {
+        if (result.success) {
+          sessionStorage.setItem("iin", JSON.stringify(iin));
+          sessionStorage.setItem("app_number", JSON.stringify(app_number));
+          //SHOW INPUT OTP TO VERIFY CODE
+          setMessageBlock(true);
         }
+        // else if (result.error === "Applicant not found.") { // Check the actual error message returned by the API
+        //   setIsUser(true);
+        // }
 
-
+        else if (result.error) {
+          setIsWrongIIN(true);
+        }
+        //APLICANT NOT FOUND
+        else {
+          setMessageBlock(false)
+          //APPLICANT NOT FOUND ERROR
+          isUser(true);
+        }
       })
-      .catch((error) => {
-        // setSearch(false);
-      });
+      .catch(error => console.log('error', error));
   };
 
-  // SEARCH TICKET SUBMIT BUTTON
-  const submit = (data) => {
-    // setIsLoading(true);
-    // setTimeout(() => {
-    //   setIsLoading(false);
-    // }, 500);
-    // getUserData(data);
-    // reset();
-    setMessageBlock(true);
+
+
+  //SEND SMS CODE FROM USER
+  const sendVerifyCodeApplicant = async (verify_code, token) => {
+    const url = "/api/t1/theory/verify/"
+
+    const storageData = sessionStorage.getItem("iin");
+    const storageData2 = sessionStorage.getItem("app_number");
+
+    const obj = {
+      "iin": JSON.parse(storageData),
+      "app_number": JSON.parse(storageData2),
+      "code": verify_code,
+    }
+
+    let myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+
+    let raw = JSON.stringify({
+      iin: JSON.parse(storageData),
+      app_number: JSON.parse(storageData2),
+      code: verify_code
+    });
+
+    fetch(url, {
+      headers: myHeaders,
+      method: "POST",
+      body: raw
+    }).then((response) => {
+      if (response.ok) {
+        return response.json();
+      }
+      else {
+        setResponseError(true);
+        throw new Error(`INITIAL Request failed with status code ${response.status}`);
+      }
+    })
+      .then((data) => {
+        if (data.error) {
+          //SHOW ERROR IF APPLICANT NOT PASS THEORY EXAM
+          // setIsVerify(true)
+          if (data.error == "У заявителя есть активные экзамены.") { // assuming the server returns this data
+            setHasActiveTicket(true);
+            if (data.exam_data) {
+              sessionStorage.setItem("exam_data", JSON.stringify(data.exam_data));
+              setExamData(data.exam_data);
+              setHasActiveTicket(true);
+            }
+          } else {
+            if (data.error == "The application number has expired.") {
+              setExpiredAppNumber(true);
+            } else {
+              setMessageBlock(false)
+              setNotPassExam(true);
+              setOTP("");
+              //console.log(data.error);
+              // console.log(data)
+            }
+          }
+        }
+        //APLICANT INPUT WRONG VERIFY CODE
+        else if (data.error === false) {
+          //SHOW ERROR APPLICANT INPUT WRONG VERIFY CODE
+          setMessageBlock(true);
+          setIsWrongCode(true);
+          setOTP("");
+
+        }
+        //OK
+        else {
+          //console.log(data);
+          setNotPassExam(false);
+          setIsVerify(true);
+          dispatch(setDataUser(data));
+          setMessageBlock(false);
+          setOTP("");
+        }
+      })
+    /*.catch(function (res) {
+      console.log(res,'\texcept');
+      return res
+    });*/
   };
 
-  useEffect(() => { }, []);
+  // IF THE TIMER IS OUT OF TIME TOOGLE DISABLED BUTTON "Забронировать"
+  const timeDone = () => {
+    setDisBtn(true);
+  };
+
+  // SEND SMS CODE AGAIN
+  const SendMessageAgain = () => {
+    setDisBtn(false);
+    //RESTART TIMER
+    setSeconds((seconds) => (seconds += 10));
+    const storageData = sessionStorage.getItem("iin");
+    const storageData2 = sessionStorage.getItem("app_number");
+    verifyUser(JSON.parse(storageData, storageData2));
+  };
+
+  //SUBMIT - SEND IIN AND GET VERIFY CODE
+  const getMessage = (data) => {
+    verifyUser(data.IIN, data.APP_NUMBER, token.access);
+  };
+
+  //SEND SMS CODE FROM APPLICANT TO CHECK
+  const verifyOTP = () => {
+
+    sendVerifyCodeApplicant(OTP, token.access);
+    if (isVerify)
+      submit();
+  }
+
+
+
+  const submit = () => {
+    setIsLoading(true);
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 500);
+
+    setMessageBlock(false);
+    //sendVerifyCodeApplicant(OTP, token.access);
+    reset();
+  };
+
+  useEffect(() => {
+    //console.log(token.access)
+  }, [isVerify, seconds, notPassExam, OTP, token]);
 
   return (
-    <div className="offset_theory_exam_page">
+    <div className="offset_theory_exam_page flex-column">
+
+      <div className="d-flex w-100 mt-4">
+        <button className="btn_back" onClick={() => navigate(-1)}>
+          <IoIosArrowBack />
+          {t("goBack")}
+        </button>
+      </div>
+
       <div className="d-flex w-100 text-center flex-column mt-4">
-        <h2 className="header_text_theory_exam_form">
-          {t("titlePageTheoryExam")}
-        </h2>
-        <div className="d-flex w-100">
-          <button className="btn_back" onClick={() => navigate(-1)}>
-            <IoIosArrowBack />
-            {t("goBack")}
-          </button>
-        </div>
-        {!search ? (
+        <h2>{t("titlePageTheoryExam")}</h2>
+      </div>
+
+      <div className="d-flex w-100 text-start align-items-center justify-content-center">
+        {!isVerify ? (
           <form
             className={messageBlock ? "hide" : "form_input"}
-            onSubmit={handleSubmit(submit)}
+            onSubmit={handleSubmit(getMessage)}
           >
-            <p className="text-center">{t("head_text_input")}</p>
+            <p className="text-center mt-5">{t("head_text_input")}</p>
             {/* INPUT TICKET */}
             <input
               className="form-control input_w my-2"
-              placeholder={t("head_text_input")}
+              placeholder={t("iin")}
               maxLength="12"
               minLength="12"
               name="IIN"
               {...register("IIN", {
-                required: "Введите ваш номер завки",
+                required: "Введите ИИН",
                 pattern: {
                   value: /^[0-9]+$/,
                   message: "ИИН состоит только из цифр",
                 },
               })}
             />
+
+            <input
+              className="form-control input_w my-2"
+              placeholder={t("applicationNumber")}
+              maxLength="12"
+              minLength="12"
+              name="APP_NUMBER"
+              {...register("APP_NUMBER", {
+                required: "Введите ваш номер заявки",
+                pattern: {
+                  value: /^(00900|00403)[0-9]{7}$/,
+                  message: "Номер заявки должен состоять из 12 цифр и начинаться с 00900 или 00403",
+                },
+              })}
+            />
+
             {/* ERRORS FOR INPUT */}
             {errors.IIN && <p className="text-danger">{errors.IIN.message}</p>}
-            {isUser && <p className="text-danger">Неверный цифровой талон</p>}
+            {errors.APP_NUMBER && <p className="text-danger">{errors.APP_NUMBER.message}</p>}
+
+            {/* ERROR NOT FOUND TICKTET */}
+            {isUser && (
+              <p className="text-danger my-2">{t("notIINFound")}</p>
+            )}
+            {isWrongIIN && <p className="text-danger fs-3">{t("wrongIIN")}</p>}
+
+            {/* ERROR IF USER BOOKS FOR THEORY EXAM */}
+
             {/* SUBMIT BUTTON */}
             <button
-              className="btn btn-success my-2 btn_width"
+              className="btn btn-success btn_width my-3"
               type="submit"
               disabled={!isDirty || !isValid}
+              onClick={() => setIsTextVisible(false)}
             >
+              {/* Авторизоваться */}
               {t("btn_title_reservation")}
             </button>
           </form>
         ) : (
+          // SHOW FORM TO SELECT DATE AND TIME TO RESERVE PRACTICE EXAM
           <div className="d-flex w-100 text-start align-items-center justify-content-center">
-            <TheoryExamForm isReserv={isReserv} />
+            <TheoryExamForm />
           </div>
         )}
-        {messageBlock && (
-          <div className="d-flex flex-column align-items-center justify-content-center w-100 mt-3">
-            <input className="form-control w-50 mb-2" />
-            <div className="d-flex w-50 align-items-center justify-content-center w-100">
-              <ReactCountdownClock
-                seconds={120}
-                color="#F40"
-                alpha={1}
-                size={40}
-              />
 
-              <button className="btn btn-primary">
-                {t("againOTP")}
-              </button>
-              <button className="btn btn-success">Забронировать</button>
-            </div>
-          </div>
-        )}
+
       </div>
+
+      {/* {isTextVisible && (
+        <p className="text-center mt-3 text-muted">
+          {t("bmgNote")}
+        </p>
+      )} */}
+
+      {/* SHOW INPUT TO VERIFY CODE */}
+      {messageBlock && (
+        <div
+          className="d-flex flex-wrap flex-column align-items-center justify-content-center w-100 mt-3"
+        // onSubmit={handleSubmit(submit)}
+        >
+          <p className="px-3 text-center">
+            {/* Введите отправленный на ваш телефон номер код. */}
+            {t("enterOTP")}
+          </p>
+
+          <OTPInput
+            value={OTP}
+            onChange={setOTP}
+            autoFocus
+            OTPLength={6}
+            otpType="number"
+            maxTime={seconds}
+            disabled={seconds === 0}
+            inputStyles={{
+              border: "1px solid green",
+              width: "44px",
+              height: "44px",
+              fontSize: "18px",
+              borderRadius: "8px",
+            }}
+            focusStyle={{
+              border: "1px solid green",
+            }}
+          />
+
+          <h2 className="text-danger text-center">{notPassExam}</h2>
+          {/* ERROR APPLICANT  */}
+          {isWrongCode && <p className="text-danger fs-3">{t("wrongOTP")}</p>}
+
+          {/* ERROR EXPIRED APP NUMBER */}
+          {expiredAppNumber && <p className="text-danger fs-3">{t("expiredAppNumber")}</p>}
+
+          {/* Error like 500 */}
+          {responseError && <p className="text-danger fs-3">Извините, произошла внутренняя ошибка сервера. Наши специалисты уже уведомлены о проблеме и работают над её устранением. Пожалуйста, попробуйте повторить запрос позже.</p>}
+
+          <div className="d-flex flex-column w-50 align-items-center justify-content-center w-100 mt-3">
+            {/* КНОПКА ЗАБРОНИРОВАТЬ */}
+            <button
+              className="btn btn-success mb-5"
+              type="button"
+              onClick={verifyOTP}
+              disabled={disBtn || OTP.length < 6}
+            >
+              {t("bron")}
+            </button>
+
+
+            <button
+              className="btn mb-3 btn-light"
+              onClick={() => SendMessageAgain()}
+              disabled={!disBtn}
+            >
+              {/* Отправить код повторно */}
+              {t("againOTP")}
+            </button>
+
+
+            {/* COUNT DOWN TIMER */}
+            <ReactCountdownClock
+              seconds={seconds}
+              color="#6c757d"
+              alpha={2}
+              size={48}
+              onComplete={timeDone}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* MODAL LOADING ANIMATE  */}
       {isloading && <ModalLoading isLoading={isloading} />}
-      <ModalTheoryExam isReserv={isReserv} setShow={setIsReserv} />
+
+      {/* SHOW MODAL ERROR */}
+      <ModalPracticeError
+        isTheoryResModal={isTheoryResModal}
+        setShow={setIsTheoryResModal}
+      />
+
+      {/* SHOW CONGRATULATION MODAL */}
+      <ModalCongratPractice
+        congartModal={congartModal}
+        setShow={setCongartModal}
+      />
+
+      {/* SHOW ACTIVE TICKET MODAL */}
+      <ModalActiveTicket
+        hasActiveTicket={hasActiveTicket}
+        setHasActiveTicket={setHasActiveTicket}
+        examData={examData}
+      />
+
     </div>
   );
 };

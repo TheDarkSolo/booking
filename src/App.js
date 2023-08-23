@@ -18,30 +18,43 @@ import TicketPracticeExam from "./Components/TicketPracticeExam/TicketPracticeEx
 import ErrorEnrollPage from "./Components/ErrorPage/ErrorEnrollPage";
 import ErrorVerifyPage from "./Components/ErrorPage/ErrorVerifyPage";
 
+
 import "./App.css";
 
 import 'bootstrap/dist/css/bootstrap.min.css';
+import PracticeExamVerification from "./Components/Reservation/PracticeExamPage/PracticeExamVerification";
+import TheoryExamVerification from "./Components/Reservation/TheoryExamPage/TheoryExamVerification.js";
 
 function App() {
   return (
     <BrowserRouter>
-    <div className="App">
-      <MenuHoverProvider>
-        <Header/>
-        <Routes>
-          <Route path="/" element={<Home/>}/>
-          <Route path="/application" element={<Application/>}/>
-          <Route path="/reservation" element={<Reservation/>}/>
-          <Route path="/reservation/practice-exam" element={<PracticeExamPage/>}/>
-          <Route path="/reservation/practice-exam/ticket" element={<TicketPracticeExam/>}/>
-          <Route path="/result-exam" element={<ResultExam/>}/>
-          <Route path="/traffic-rules" element={<TrafficRulesInstructions/>}/>
-          <Route path="/search-result-exam" element={<SearchResultExam/>}/>
-          <Route path="/error-enroll-page" element={<ErrorEnrollPage/>}/>
-          <Route path="/error-verify-page" element={<ErrorVerifyPage/>}/>
-          <Route path="*" element={<ErrorPage/>}/>
-        </Routes>
-      </MenuHoverProvider>
+      <div className="App">
+        <MenuHoverProvider>
+          <Header />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/application" element={<Application />} />
+            <Route path="/reservation" element={<Reservation />} />
+            <Route path="/reservation/practice-exam" element={<PracticeExamPage />} />
+
+            <Route path="/reservation/theory-exam" element={<TheoryExamPage />} />
+
+            <Route path="/reservation/practice-exam/ticket" element={<TicketPracticeExam />} />
+            <Route path="/reservation/theory-exam/ticket" element={<TicketTheoryExam />} />
+
+
+            <Route path="/reservation/theory-exam/verification" element={<TheoryExamVerification />} />
+
+            <Route path="/reservation/practice-exam/verification" element={<PracticeExamVerification />} />
+
+            <Route path="/result-exam" element={<ResultExam />} />
+            <Route path="/traffic-rules" element={<TrafficRulesInstructions />} />
+            <Route path="/search-result-exam" element={<SearchResultExam />} />
+            <Route path="/error-enroll-page" element={<ErrorEnrollPage />} />
+            <Route path="/error-verify-page" element={<ErrorVerifyPage />} />
+            <Route path="*" element={<ErrorPage />} />
+          </Routes>
+        </MenuHoverProvider>
       </div>
     </BrowserRouter>
   );

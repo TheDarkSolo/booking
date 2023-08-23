@@ -3,10 +3,11 @@ import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
+import { getCurrentLanguage } from '/home/erbulan/booking/src/config/i18n.js';
 
 //COMPONENTS
 import ModalLoading from "../ModalLoading/ModalLoading";
-import PracticeExamForm from "./PracticeExamForm/PracticeExamForm";
+import PracticeExamForm from "./PracticeExamForm";
 import ModalPracticeError from "../../Modal/ModalPracticeError";
 import ModalCongratPractice from "../../Modal/ModalCongratPractice";
 import ReactCountdownClock from "react-countdown-clock";
@@ -34,6 +35,9 @@ const PracticeExamPage = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
+  const [examData, setExamData] = useState(null);
+
+
   //SHOW FORM SELECT DATE AND TIME FOR EXAM AFTER VERIFY APPLICANT
   const [isVerify, setIsVerify] = useState(false);
   //SHOW LOADING ANIMATION MODAL
@@ -60,6 +64,9 @@ const PracticeExamPage = () => {
 
   //show error if user has already active ticket
   const [hasActiveTicket, setHasActiveTicket] = useState(false);
+
+  //bmgNote hide
+  const [isTextVisible, setIsTextVisible] = useState(true);
 
   const token = useSelector(state => state.token.token)
 
@@ -101,7 +108,7 @@ const PracticeExamPage = () => {
     var requestOptions = {
       method: 'GET', /*headers: myHeaders, */redirect: 'follow'
     };
-    fetch("https://bback.gov4c.kz/api/verify/" + iin, requestOptions)
+    fetch("/api/verify/" + iin + "/", requestOptions)
       .then(response => {
         if (response.ok) {
           return response.json();
@@ -132,7 +139,7 @@ const PracticeExamPage = () => {
 
   //SEND SMS CODE FROM USER
   const sendVerifyCodeApplicant = async (verify_code, token) => {
-    const url = "https://bback.gov4c.kz/api/verify/"
+    const url = "/api/verify/"
 
     const storageData = sessionStorage.getItem("iin");
     const obj = {
@@ -166,7 +173,11 @@ const PracticeExamPage = () => {
           //SHOW ERROR IF APPLICANT NOT PASS THEORY EXAM
           // setIsVerify(true)
           if (data.error == "У заявителя есть активные экзамены.") { // assuming the server returns this data
-            setHasActiveTicket(true);
+            if (data.exam_data) {
+              sessionStorage.setItem("exam_data", JSON.stringify(data.exam_data));
+              setExamData(data.exam_data);
+              setHasActiveTicket(true);
+            }
           } else {
             setMessageBlock(false)
             setNotPassExam(true);
@@ -223,7 +234,8 @@ const PracticeExamPage = () => {
 
   //SEND SMS CODE FROM APPLICANT TO CHECK
   const verifyOTP = () => {
-    sendVerifyCodeApplicant(OTP, token.access);
+
+    sendVerifyCodeApplicant(OTP, token.access, getCurrentLanguage());
     if (isVerify)
       submit();
   }
@@ -244,26 +256,29 @@ const PracticeExamPage = () => {
 
   return (
     <div className="offset_theory_exam_page flex-column">
-      <div className="d-flex w-100 text-center flex-column mt-4">
-        <h2>{t("titlePagePracticeExam")}</h2>
-      </div>
-      <div className="d-flex w-100">
+
+      <div className="d-flex w-100 mt-4">
         <button className="btn_back" onClick={() => navigate(-1)}>
           <IoIosArrowBack />
           {t("goBack")}
         </button>
       </div>
+
+      <div className="d-flex w-100 text-center flex-column mt-4">
+        <h2>{t("titlePagePracticeExam")}</h2>
+      </div>
+
       <div className="d-flex w-100 text-start align-items-center justify-content-center">
         {!isVerify ? (
           <form
             className={messageBlock ? "hide" : "form_input"}
             onSubmit={handleSubmit(getMessage)}
           >
-            <p className="text-center">{t("head_text_input")}</p>
+            <p className="text-center mt-5">{t("head_text_input")}</p>
             {/* INPUT TICKET */}
             <input
               className="form-control input_w my-2"
-              placeholder={t("iin_input_placeholder")}
+              placeholder={t("iin")}
               maxLength="12"
               minLength="12"
               name="IIN"
@@ -289,22 +304,31 @@ const PracticeExamPage = () => {
 
             {/* SUBMIT BUTTON */}
             <button
-              className="btn btn-success btn_width my-2"
+              className="btn btn-success btn_width my-3"
               type="submit"
               disabled={!isDirty || !isValid}
+              onClick={() => setIsTextVisible(false)}
             >
               {/* Авторизоваться */}
               {t("btn_title_reservation")}
             </button>
           </form>
-
         ) : (
           // SHOW FORM TO SELECT DATE AND TIME TO RESERVATION PRACTICE EXAM
           <div className="d-flex w-100 text-start align-items-center justify-content-center">
             <PracticeExamForm />
           </div>
         )}
+
+
       </div>
+
+      {/* {isTextVisible && (
+        <p className="text-center mt-3 text-muted">
+          {t("bmgNote")}
+        </p>
+      )} */}
+
       {/* SHOW INPUT TO VERIFY CODE */}
       {messageBlock && (
         <div
@@ -315,19 +339,7 @@ const PracticeExamPage = () => {
             {/* Введите отправленный на ваш телефон номер код. */}
             {t("enterOTP")}
           </p>
-          {/* <input
-            className="form-control w-50 mb-2"
-            maxLength="6"
-            minLength="6"
-            name="IIN"
-            {...register("message", {
-              required: "Введите или номер завки",
-              pattern: {
-                value: /^[0-9]+$/,
-                message: "ИИН состоит только из цифр",
-              },
-            })}
-          /> */}
+
           <OTPInput
             value={OTP}
             onChange={setOTP}
@@ -405,6 +417,7 @@ const PracticeExamPage = () => {
       <ModalActiveTicket
         hasActiveTicket={hasActiveTicket}
         setHasActiveTicket={setHasActiveTicket}
+        examData={examData} // Pass the examData prop here
       />
 
     </div>

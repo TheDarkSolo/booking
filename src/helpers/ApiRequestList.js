@@ -87,41 +87,41 @@ export const getExamDateById = async (id) => {
   return result;
 };
 
-export const getFreeExamPractice = async (id, categoryName, kpp) => {
-  const username = "admin";
-  const password = "admin";
+// export const getFreeExamPractice = async (id, categoryName, kpp) => {
+//   const username = "admin";
+//   const password = "admin";
 
-  const obj = {
-    department_id: id,
-    category: categoryName,
-    kpp: kpp,
-  };
+//   const obj = {
+//     department_id: id,
+//     category: categoryName,
+//     kpp: kpp,
+//   };
 
-  fetch(`/api/practice/free/exams/`, {
-    method: "POST",
-    headers: {
-      Authorization: "Basic " + btoa(username + ":" + password),
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Headers": "Content-Type",
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Methods": "OPTIONS,POST,GET,PATCH",
-    },
-    body: JSON.stringify(obj),
-  })
-    .then((response) => {
-      if (response.ok) {
-        return response.json();
-      } else {
-        throw new Error(`Request failed with status code ${response.status}`);
-      }
-    })
-    .then((data) => {
-      return data;
-    })
-    .catch(function (res) {
-      return res
-    });
-};
+//   fetch(`/api/practice/free/exams/`, {
+//     method: "POST",
+//     headers: {
+//       Authorization: "Basic " + btoa(username + ":" + password),
+//       "Access-Control-Allow-Origin": "*",
+//       "Access-Control-Allow-Headers": "Content-Type",
+//       "Content-Type": "application/json",
+//       "Access-Control-Allow-Methods": "OPTIONS,POST,GET,PATCH",
+//     },
+//     body: JSON.stringify(obj),
+//   })
+//     .then((response) => {
+//       if (response.ok) {
+//         return response.json();
+//       } else {
+//         throw new Error(`Request failed with status code ${response.status}`);
+//       }
+//     })
+//     .then((data) => {
+//       return data;
+//     })
+//     .catch(function (res) {
+//       return res
+//     });
+// };
 
 export const getUserByAppNumber = async (id) => {
   const url = "/api/search/applicant/";
@@ -155,7 +155,7 @@ export const verifyUserByIIN = async (iin, token) => {
     method: 'GET', headers: myHeaders, redirect: 'follow'
   };
   fetch("http://booking.gov4c.kz/api/verify/" + iin, requestOptions)
-  .then(response =>response.json)
+    .then(response => response.json)
     .then(result => result)
     .catch(error => error);
 }

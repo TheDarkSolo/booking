@@ -2,9 +2,10 @@ import React from "react";
 import { Button, Modal } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-export default function ModalActiveTicket({ hasActiveTicket, setHasActiveTicket }) {
+export default function ModalActiveTicket({ hasActiveTicket, setHasActiveTicket, examData }) {
     const { t } = useTranslation()
     const handleClose = () => setHasActiveTicket(false);
+
     return (
         <Modal show={hasActiveTicket} onHide={handleClose}>
             <Modal.Header closeButton>
@@ -14,6 +15,18 @@ export default function ModalActiveTicket({ hasActiveTicket, setHasActiveTicket 
                 {" "}
                 {/* У вас уже есть активный талон. Данные были высланы в виде SMS. Проверьте свои сообщения. */}
                 {t("hasActiveTicket")}
+
+                <div style={{ borderBottom: "1px solid #ccc", margin: "10px 0" }} /> {/* Horizontal line */}
+
+                {examData && (
+                    <div>
+                        <p>{t("iin")}: {examData.iin}</p>
+                        <p>{t("examDate")}: {examData.date}</p>
+                        <p>{t("examTime")}: {examData.time}</p>
+                        <p>{t("examDepartment")}: {examData.department}</p>
+                    </div>
+                )}
+
             </Modal.Body>
             <Modal.Footer>
                 <Link to="/reservation">

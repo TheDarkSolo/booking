@@ -12,7 +12,7 @@ import { useTranslation } from "react-i18next";
 
 
 const PracticeExamForm = () => {
-  const {t} = useTranslation()
+  const { t } = useTranslation()
   //LOADING ANIMATION
   const [loading, setLoading] = useState(false);
   //SET TODAY DATE FOR DATEPICKER
@@ -83,48 +83,48 @@ const PracticeExamForm = () => {
   };
 
   //GET FREE PRACTICE EXAM
-  const getFreeExamPractice = async (id_depart) => {
-    const url = "/api/practice/free/exams/";
-    const username = "admin";
-    const password = "admin";
+  // const getFreeExamPractice = async (id_depart) => {
+  //   const url = "/api/practice/free/exams/";
+  //   const username = "admin";
+  //   const password = "admin";
 
-    const id = id_depart;
-    const categoryName = userData.category;
-    const kpp = userData.kpp === "Автомат" ? "автомат" : "механика";
+  //   const id = id_depart;
+  //   const categoryName = userData.category;
+  //   const kpp = userData.kpp === "Автомат" ? "автомат" : "механика";
 
-    fetch(url, {
-      headers: {
-        Authorization: "Basic " + btoa(username + ":" + password),
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Headers": "Content-Type",
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Methods": "OPTIONS,POST,GET,PATCH",
-      },
-      method: "POST",
-      body: JSON.stringify({
-        department_id: id,
-        category: categoryName,
-        kpp: kpp,
-      }),
-    })
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          throw new Error(`Request failed with status code ${response.status}`);
-        }
-      })
-      .then((data) => {
-        if (data.length === 0) {
-          setDateError(true);
-          setDateList(data);
-        } else {
-          setDateError(false);
-          setDateList(data);
-        }
-      })
-      .catch(function (res) {});
-  };
+  //   fetch(url, {
+  //     headers: {
+  //       Authorization: "Basic " + btoa(username + ":" + password),
+  //       "Access-Control-Allow-Origin": "*",
+  //       "Access-Control-Allow-Headers": "Content-Type",
+  //       "Content-Type": "application/json",
+  //       "Access-Control-Allow-Methods": "OPTIONS,POST,GET,PATCH",
+  //     },
+  //     method: "POST",
+  //     body: JSON.stringify({
+  //       department_id: id,
+  //       category: categoryName,
+  //       kpp: kpp,
+  //     }),
+  //   })
+  //     .then((response) => {
+  //       if (response.ok) {
+  //         return response.json();
+  //       } else {
+  //         throw new Error(`Request failed with status code ${response.status}`);
+  //       }
+  //     })
+  //     .then((data) => {
+  //       if (data.length === 0) {
+  //         setDateError(true);
+  //         setDateList(data);
+  //       } else {
+  //         setDateError(false);
+  //         setDateList(data);
+  //       }
+  //     })
+  //     .catch(function (res) {});
+  // };
 
   //POST DATA TO SERVER AFTER CHOISE APPLICANT DATE AND TIME
   const postUserExamData = (user_exam_data) => {
@@ -210,13 +210,13 @@ const PracticeExamForm = () => {
               Обязательно выберите вид КПП, который вы указали при регистрации.
             </p>
             <select
-    className="form-select"
-    onChange={(e) => onChangeSelectKPP(e.target.value)}
->
-    <option selected disabled value="">Выберите КПП</option>
-    <option value="MT">Механика</option>
-    <option value="AT">Автомат</option>
-</select>
+              className="form-select"
+              onChange={(e) => onChangeSelectKPP(e.target.value)}
+            >
+              <option selected disabled value="">Выберите КПП</option>
+              <option value="MT">Механика</option>
+              <option value="AT">Автомат</option>
+            </select>
           </>
         )}
         {/* ERROR */}

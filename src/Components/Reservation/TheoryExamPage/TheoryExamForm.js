@@ -145,8 +145,6 @@ const TheoryExamForm = () => {
       user_id: userData.id,
       exam_id: examId,
       department_id: departmentId,
-      // category: category,
-      // kpp: kppApp,
     };
 
     postUserExamData(obj);

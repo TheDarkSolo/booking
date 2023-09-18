@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { set, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -48,6 +48,7 @@ const PracticeExamForm = () => {
   const [city, setCity] = useState(userData.city);
   const [dateBlock, setDateBlock] = useState(false);
   const [address, setAddress] = useState(userData.address);
+  const [hasDriverLicense, setHasDriverLicense] = useState(false);
 
   const getExcludedSundays = () => {
     const todayDate = new Date();
@@ -110,14 +111,25 @@ const PracticeExamForm = () => {
   };
   //SHOW SELECTORS OF DATE AND TIME
   const dateButtonClick = () => {
-    setDateBlock(true);
-    getFreeExamPractice(kppApp);
-    document.getElementById('category-select').disabled = true;
-    document.getElementById('city-select').disabled = true;
-    document.getElementById('department-select').disabled = true;
-    document.getElementById('chooseDateBtn').style.display = 'none';
-    if (document.getElementById('kpp-select')) {
-      document.getElementById('kpp-select').disabled = true;
+    if (hasDriverLicense) {
+      setDateBlock(false);
+      document.getElementById('category-select').disabled = true;
+      document.getElementById('city-select').disabled = true;
+      document.getElementById('department-select').disabled = true;
+      document.getElementById('chooseDateBtn').style.display = 'none';
+      if (document.getElementById('kpp-select')) {
+        document.getElementById('kpp-select').disabled = true;
+      }
+    } else {
+      setDateBlock(true);
+      getFreeExamPractice(kppApp);
+      document.getElementById('category-select').disabled = true;
+      document.getElementById('city-select').disabled = true;
+      document.getElementById('department-select').disabled = true;
+      document.getElementById('chooseDateBtn').style.display = 'none';
+      if (document.getElementById('kpp-select')) {
+        document.getElementById('kpp-select').disabled = true;
+      }
     }
   }
 
@@ -231,14 +243,21 @@ const PracticeExamForm = () => {
         }
       })
       .then((data) => {
-        if (data.length === 0) {
-          setDateError(true);
-          setDateList(data);
+        if (data.error == "Ошибка: Данная услуга предназначена только для лиц без водительских удостоверений") {
+          console.log("Ошибка: Данная услуга предназначена только для лиц без водительских удостоверений");
+          setHasDriverLicense(true);
         } else {
-          setDateError(false);
-          setDateList(data);
+          if (data.length === 0) {
+            setDateError(true);
+            setDateList(data);
+          } else {
+            setDateError(false);
+            setDateList(data);
+          }
         }
-      })
+      }
+
+      )
       .catch(function (res) { });
   };
 
@@ -402,6 +421,8 @@ const PracticeExamForm = () => {
             {t("selectDateButton")}
           </button>
         </center>
+
+
         {/* ===========ВЫБЕРИТЕ ДАТУ============== */}
         {dateBlock && (
           <div className="date">
@@ -418,14 +439,18 @@ const PracticeExamForm = () => {
                   {t("selectDate")}
                 </option>
 
-                {uniqueDatesWithTime.map((item) => (
-                  <option
-                    key={item.id}
-                    value={item.date}
-                  >
-                    {item.date}
-                  </option>
-                ))}
+                {setHasDriverLicense && (
+                  uniqueDatesWithTime.map((item) => (
+                    <option
+                      key={item.id}
+                      value={item.date}
+                    >
+                      {item.date}
+                    </option>
+                  ))
+                )}
+
+
               </select>
 
               {/* ERROR*/}
@@ -468,8 +493,15 @@ const PracticeExamForm = () => {
                   <option key={time.id}>{time.time}</option>
                 ))}
               </select>
+
+
             </div>
+
+            {hasDriverLicense && <p className="text-danger fs-3">{t("hasDriverLicense")}</p>}
+
             <div class="form-group text-center">
+
+
               <button className="btn btn-danger mx-5" onClick={() => navigate(-2)}>{/* Отмена */}{t("cancel")}</button>
 
 
@@ -487,6 +519,9 @@ const PracticeExamForm = () => {
 
           </div>)
         }
+
+
+
       </form >
       {loading && <ModalLoading isLoading={loading} />}
     </div >

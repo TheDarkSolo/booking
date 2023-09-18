@@ -42,7 +42,7 @@ i18n.use(initReactI18next).init({
 
           {
             id: 3,
-            menu_name: "Инструкция",
+            menu_name: "Трансляция",
             menu_img: pdd,
             menu_bg_color: "#deebec",
             link: "traffic-rules",
@@ -135,11 +135,13 @@ i18n.use(initReactI18next).init({
 
         expiredAppNumber: "Срок действия заявки истек",
 
+        hasDriverLicense: "Данная услуга предназначена только для лиц без водительских удостоверений",
+
       },
     },
     kz: {
       translation: {
-        title: "Жүргізуші куәлігін алу үшін практикалық емтиханға электронды кезекті алдын ала брондау",
+        title: "Жүргізуші куәлігін алу үшін емтиханға электронды кезекті алдын ала брондау",
         menu: [
           {
             id: 1,
@@ -160,7 +162,7 @@ i18n.use(initReactI18next).init({
           */
           {
             id: 3,
-            menu_name: "Нұсқау",
+            menu_name: "Трансляция",
             menu_img: pdd,
             menu_bg_color: "#deebec",
             link: "traffic-rules",
@@ -248,6 +250,8 @@ i18n.use(initReactI18next).init({
         examDepartment: "ХҚКО",
 
         expiredAppNumber: "Өтініш нөмірінің мерзімі аяқталды",
+
+        hasDriverLicense: "Бұл қызмет тек жүргізуші куәлігі бар адамдар үшін арналған",
       },
     },
   },

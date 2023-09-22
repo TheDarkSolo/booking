@@ -24,9 +24,9 @@ const TrafficRulesInstructions = () => {
             <tr key={item.id}>
               <td>{index + 1}</td>
               <td>{item.name}</td>
-              <td>
+              <td style={{ textAlign: 'center' }}>
                 <a href={item.link} target="_blank" rel="noopener noreferrer">
-                  {item.link}
+                  Посмотреть
                 </a>
               </td>
             </tr>
@@ -41,7 +41,7 @@ const TrafficRulesInstructions = () => {
               <tr>
                 <th>№</th>
                 <th>Наименование СЦОН/сектора</th>
-                <th>Cсылка для просмотра</th>
+                <th style={{ textAlign: 'center' }}>Cсылка для просмотра</th>
               </tr>
             </thead>
             <tbody>{rows}</tbody>
@@ -56,11 +56,16 @@ const TrafficRulesInstructions = () => {
 
   return (
     <div className="offset_traffic_rules_inst">
+      <br />
       <center>
-        <h1>Трансляция</h1>
+        <h2>{t("stream")}</h2>
       </center>
       <br />
       <div id="table-container"></div>
+      <br />
+      <br />
+      <br />
+      <br />
     </div>
   );
 };

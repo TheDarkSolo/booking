@@ -3,7 +3,7 @@ import { initReactI18next, i } from "react-i18next";
 
 import booking from "../assets/images/booking.jpeg";
 import res_exam from "../assets/images/res_exam.jpeg";
-import pdd from "../assets/images/pdd.jpeg";
+import pdd from "../assets/images/pdd.png";
 
 // ============================
 export const getCurrentLanguage = () => {

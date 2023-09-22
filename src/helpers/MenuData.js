@@ -1,7 +1,7 @@
 
 // import application from '../assets/images/application.jpg'
 import booking from '../assets/images/booking.jpeg'
-import pdd from '../assets/images/pdd.jpeg'
+import pdd from '../assets/images/pdd.png'
 import res_exam from '../assets/images/res_exam.jpeg'
 
 

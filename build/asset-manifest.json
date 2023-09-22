@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.cd60f0e5.css",
-    "main.js": "/static/js/main.cb7b665e.js",
+    "main.css": "/static/css/main.2a17b1f6.css",
+    "main.js": "/static/js/main.fd17279d.js",
     "static/js/703.40997a56.chunk.js": "/static/js/703.40997a56.chunk.js",
     "static/js/513.1fe83f69.chunk.js": "/static/js/513.1fe83f69.chunk.js",
     "static/media/driver_license.jpg": "/static/media/driver_license.57e60aa020845a6687cc.jpg",
@@ -10,15 +10,15 @@
     "static/media/reservePractice2.png": "/static/media/reservePractice2.057661d8a4c52e50afcd.png",
     "static/media/res_exam.jpeg": "/static/media/res_exam.1a509ba5e6b743a30326.jpeg",
     "static/media/booking.jpeg": "/static/media/booking.cf64fe159cc29c9329e6.jpeg",
-    "static/media/pdd.jpeg": "/static/media/pdd.9dddfde85d3370f5bc9c.jpeg",
+    "static/media/pdd.png": "/static/media/pdd.a447cfa1c13d2f81441e.png",
     "index.html": "/index.html",
-    "main.cd60f0e5.css.map": "/static/css/main.cd60f0e5.css.map",
-    "main.cb7b665e.js.map": "/static/js/main.cb7b665e.js.map",
+    "main.2a17b1f6.css.map": "/static/css/main.2a17b1f6.css.map",
+    "main.fd17279d.js.map": "/static/js/main.fd17279d.js.map",
     "703.40997a56.chunk.js.map": "/static/js/703.40997a56.chunk.js.map",
     "513.1fe83f69.chunk.js.map": "/static/js/513.1fe83f69.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.cd60f0e5.css",
-    "static/js/main.cb7b665e.js"
+    "static/css/main.2a17b1f6.css",
+    "static/js/main.fd17279d.js"
   ]
 }

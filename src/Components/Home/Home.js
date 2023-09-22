@@ -53,8 +53,8 @@ export default function Home() {
               </Link>
             </div>
             <div class="col">
-              {/* <Link to={"/traffic-rules"}> */}
-              <a href="https://egov.kz/cms/kk/articles/poluchenie_pravab" target="_blank" rel="noopener noreferrer">
+              <Link to={"/traffic-rules"}>
+                {/* <a href="https://egov.kz/cms/kk/articles/poluchenie_pravab" target="_blank" rel="noopener noreferrer"> */}
                 <div class="p-4 rounded d-flex flex-column align-items-center border bg-white cursor-pointer mb-2">
                   <img
                     src={t("menu.1.menu_img")}
@@ -64,8 +64,8 @@ export default function Home() {
                   />
                   <h3 className="text-dark">{t("menu.1.menu_name")}</h3>
                 </div>
-                {/* </Link> */}
-              </a>
+              </Link>
+              {/* </a> */}
             </div>
           </div>
         </div>

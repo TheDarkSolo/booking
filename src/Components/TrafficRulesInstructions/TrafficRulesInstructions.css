@@ -1,6 +1,22 @@
-.offset_traffic_rules_inst{
+.offset_traffic_rules_inst {
     display: flex;
     flex-direction: column;
     width: 100%;
     padding: 0px 15% 0px;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+th,
+td {
+    border: 1px solid black;
+    padding: 8px;
+    text-align: left;
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
 }

@@ -29,7 +29,7 @@ const menu = [
     menu_name: "Инструкция ПДД",
     menu_img: pdd,
     menu_bg_color: "#deebec",
-    link: "traffic-rules"
+    link: "stream"
   },
 ];
 

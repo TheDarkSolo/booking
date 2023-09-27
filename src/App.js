@@ -48,7 +48,7 @@ function App() {
             <Route path="/reservation/practice-exam/verification" element={<PracticeExamVerification />} />
 
             <Route path="/result-exam" element={<ResultExam />} />
-            <Route path="/traffic-rules" element={<TrafficRulesInstructions />} />
+            <Route path="/stream" element={<TrafficRulesInstructions />} />
             <Route path="/search-result-exam" element={<SearchResultExam />} />
             <Route path="/error-enroll-page" element={<ErrorEnrollPage />} />
             <Route path="/error-verify-page" element={<ErrorVerifyPage />} />

@@ -53,7 +53,7 @@ export default function Home() {
               </Link>
             </div>
             <div class="col">
-              <Link to={"/traffic-rules"}>
+              <Link to={"/stream"}>
                 {/* <a href="https://egov.kz/cms/kk/articles/poluchenie_pravab" target="_blank" rel="noopener noreferrer"> */}
                 <div class="p-4 rounded d-flex flex-column align-items-center border bg-white cursor-pointer mb-2">
                   <img

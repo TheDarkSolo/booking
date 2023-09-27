@@ -45,7 +45,7 @@ i18n.use(initReactI18next).init({
             menu_name: "Трансляция",
             menu_img: pdd,
             menu_bg_color: "#deebec",
-            link: "traffic-rules",
+            link: "stream",
           },
         ],
         btn_title_reservation_theory_exam:
@@ -139,6 +139,12 @@ i18n.use(initReactI18next).init({
 
         stream: "Смотреть онлайн трансляцию теоретического экзамена",
 
+        streamLink: "Cсылка для просмотра",
+
+        streamSectorName: "Наименование СЦОН/сектора",
+
+        streamWatch: "Посмотреть",
+
       },
     },
     kz: {
@@ -167,7 +173,7 @@ i18n.use(initReactI18next).init({
             menu_name: "Трансляция",
             menu_img: pdd,
             menu_bg_color: "#deebec",
-            link: "traffic-rules",
+            link: "stream",
           },
         ],
         btn_title_reservation_theory_exam: "Теориялық емтиханға онлайн тіркелу",
@@ -256,6 +262,10 @@ i18n.use(initReactI18next).init({
         hasDriverLicense: "Бұл қызмет тек жүргізуші куәлігі бар адамдар үшін арналған",
 
         stream: "Теориялық емтихан тапсыру процесінің онлайн трансляциясы",
+
+        streamLink: "Трансляцияға сілтеме",
+        streamSectorName: "ХҚКО/сектор атауы",
+        streamWatch: "Көру",
       },
     },
   },

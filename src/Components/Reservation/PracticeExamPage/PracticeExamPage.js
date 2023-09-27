@@ -65,6 +65,10 @@ const PracticeExamPage = () => {
   //show error if user has already active ticket
   const [hasActiveTicket, setHasActiveTicket] = useState(false);
 
+  //Expired ticket or 503 error
+  const [expiredAppNumber, setExpiredAppNumber] = useState(false);
+  const [responseError, setResponseError] = useState(false);
+
   //bmgNote hide
   const [isTextVisible, setIsTextVisible] = useState(true);
 
@@ -77,6 +81,7 @@ const PracticeExamPage = () => {
     formState: { errors, isDirty, isValid },
   } = useForm({
     IIN: "",
+    APP_NUMBER: "",
     mode: "onChange",
     message: "",
   });
@@ -84,7 +89,7 @@ const PracticeExamPage = () => {
   const dispatch = useDispatch();
   const { btoa } = window;
   //SEND IIN TO DATABASE TO VERIFY USER
-  const verifyUser = async (iin, token) => {
+  const verifyUser = async (iin, app_number, token) => {
     // try {
     //   const response = await verifyUserByIIN(iin,token);
 
@@ -119,6 +124,7 @@ const PracticeExamPage = () => {
       .then(result => {
         if (result.success) {
           sessionStorage.setItem("iin", JSON.stringify(iin));
+          sessionStorage.setItem("app_number", JSON.stringify(app_number));
           //SHOW INPUT OTP TO VERIFY CODE
           setMessageBlock(true);
         }
@@ -142,8 +148,11 @@ const PracticeExamPage = () => {
     const url = "/api/verify/"
 
     const storageData = sessionStorage.getItem("iin");
+    const storageData2 = sessionStorage.getItem("app_number");
+
     const obj = {
       "iin": JSON.parse(storageData),
+      "app_number": JSON.parse(storageData2),
       "code": verify_code,
     }
 
@@ -152,6 +161,7 @@ const PracticeExamPage = () => {
 
     let raw = JSON.stringify({
       iin: JSON.parse(storageData),
+      app_number: JSON.parse(storageData2),
       code: verify_code
     });
 
@@ -165,6 +175,7 @@ const PracticeExamPage = () => {
         return response.json();
       }
       else {
+        setResponseError(true);
         throw new Error(`INITIAL Request failed with status code ${response.status}`);
       }
     })
@@ -173,22 +184,28 @@ const PracticeExamPage = () => {
           //SHOW ERROR IF APPLICANT NOT PASS THEORY EXAM
           // setIsVerify(true)
           if (data.error == "У заявителя есть активные экзамены.") { // assuming the server returns this data
+            setHasActiveTicket(true);
             if (data.exam_data) {
               sessionStorage.setItem("exam_data", JSON.stringify(data.exam_data));
               setExamData(data.exam_data);
               setHasActiveTicket(true);
             }
           } else {
-            setMessageBlock(false)
-            setNotPassExam(true);
-            setOTP("");
-            //console.log(data.error);
-            // console.log(data)
+            if (data.error == "The application number has expired.") {
+              setExpiredAppNumber(true);
+            } else {
+              setMessageBlock(false)
+              setNotPassExam(true);
+              setOTP("");
+              //console.log(data.error);	
+              // console.log(data)	
+            }
           }
         }
         //APLICANT INPUT WRONG VERIFY CODE
-        else if (data.success === false) {
+        else if (data.error === false) {
           //SHOW ERROR APPLICANT INPUT WRONG VERIFY CODE
+
           setMessageBlock(true)
           setIsWrongCode(true);
           setOTP("")
@@ -224,18 +241,19 @@ const PracticeExamPage = () => {
     //RESTART TIMER
     setSeconds((seconds) => (seconds += 10));
     const storageData = sessionStorage.getItem("iin");
-    verifyUser(JSON.parse(storageData));
+    const storageData2 = sessionStorage.getItem("app_number");
+    verifyUser(JSON.parse(storageData, storageData2));
   };
 
   //SUBMIT - SEND IIN AND GET VERIFY CODE
   const getMessage = (data) => {
-    verifyUser(data.IIN, token.access);
+    verifyUser(data.IIN, data.APP_NUMBER, token.access);
   };
 
   //SEND SMS CODE FROM APPLICANT TO CHECK
   const verifyOTP = () => {
 
-    sendVerifyCodeApplicant(OTP, token.access, getCurrentLanguage());
+    sendVerifyCodeApplicant(OTP, token.access);
     if (isVerify)
       submit();
   }
@@ -286,13 +304,28 @@ const PracticeExamPage = () => {
                 required: "Введите ИИН",
                 pattern: {
                   value: /^[0-9]+$/,
-                  message: "КОД состоит только из цифр",
+                  message: "ИИН состоит только из цифр",
+                },
+              })}
+            />
+            <input
+              className="form-control input_w my-2"
+              placeholder={t("applicationNumber")}
+              maxLength="12"
+              minLength="12"
+              name="APP_NUMBER"
+              {...register("APP_NUMBER", {
+                required: "Введите ваш номер заявки",
+                pattern: {
+                  value: /^(009|004)[0-9]{9}$/,
+                  message: "Номер заявки должен состоять из 12 цифр и начинаться с 009 или 004",
                 },
               })}
             />
 
             {/* ERRORS FOR INPUT */}
-            {errors.IIN && <p className="text-danger">{errors.message}</p>}
+            {errors.IIN && <p className="text-danger">{errors.IIN.message}</p>}
+            {errors.APP_NUMBER && <p className="text-danger">{errors.APP_NUMBER.message}</p>}
 
             {/* ERROR NOT FOUND TICKTET */}
             {isUser && (
@@ -364,8 +397,14 @@ const PracticeExamPage = () => {
           {/* {notPassExam && <h2 className="text-danger text-center">Заявитель не сдал теоритический экзамен</h2>} */}
 
           <h2 className="text-danger text-center">{notPassExam}</h2>
+
           {/* ERROR APPLICANT  */}
           {isWrongCode && <p className="text-danger fs-3">{t("wrongOTP")}</p>}
+
+          {/* ERROR EXPIRED APP NUMBER */}
+          {expiredAppNumber && <p className="text-danger fs-3">{t("expiredAppNumber")}</p>}
+          {/* Error like 500 */}
+          {responseError && <p className="text-danger fs-3">Извините, произошла внутренняя ошибка сервера. Наши специалисты уже уведомлены о проблеме и работают над её устранением. Пожалуйста, попробуйте повторить запрос позже.</p>}
 
           <div className="d-flex flex-column w-50 align-items-center justify-content-center w-100 mt-3">
             <button

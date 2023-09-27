@@ -26,7 +26,7 @@ const TrafficRulesInstructions = () => {
               <td>{item.name}</td>
               <td style={{ textAlign: 'center' }}>
                 <a href={item.link} target="_blank" rel="noopener noreferrer">
-                  Посмотреть
+                  {t("streamWatch")}
                 </a>
               </td>
             </tr>
@@ -40,8 +40,8 @@ const TrafficRulesInstructions = () => {
             <thead>
               <tr>
                 <th>№</th>
-                <th>Наименование СЦОН/сектора</th>
-                <th style={{ textAlign: 'center' }}>Cсылка для просмотра</th>
+                <th>{t("streamSectorName")}</th>
+                <th style={{ textAlign: 'center' }}>{t("streamLink")}</th>
               </tr>
             </thead>
             <tbody>{rows}</tbody>

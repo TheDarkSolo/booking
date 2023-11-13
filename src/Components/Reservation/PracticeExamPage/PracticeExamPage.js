@@ -74,6 +74,12 @@ const PracticeExamPage = () => {
 
   const token = useSelector(state => state.token.token)
 
+  const [showInfo, setShowInfo] = useState(false);
+
+  const toggleInfo = () => {
+    setShowInfo(!showInfo);
+  };
+
   const {
     register,
     handleSubmit,
@@ -308,20 +314,31 @@ const PracticeExamPage = () => {
                 },
               })}
             />
-            <input
-              className="form-control input_w my-2"
-              placeholder={t("applicationNumber")}
-              maxLength="12"
-              minLength="12"
-              name="APP_NUMBER"
-              {...register("APP_NUMBER", {
-                required: "Введите ваш номер заявки",
-                pattern: {
-                  value: /^(009|004)[0-9]{9}$/,
-                  message: "Номер заявки должен состоять из 12 цифр и начинаться с 009 или 004",
-                },
-              })}
-            />
+
+            <div className="input-container">
+              <input
+                className="form-control input_w my-2"
+                placeholder={t("applicationNumber")}
+                maxLength="12"
+                minLength="12"
+                name="APP_NUMBER"
+                {...register("APP_NUMBER", {
+                  required: "Введите ваш номер заявки",
+                  pattern: {
+                    value: /^(009|004)[0-9]{9}$/,
+                    message: "Номер заявки должен состоять из 12 цифр и начинаться с 009 или 004",
+                  },
+                })}
+              />
+              <span onClick={toggleInfo} className="info-icon">
+                ℹ️
+              </span>
+            </div>
+            {showInfo && (
+              <div className="info-message">
+                {t("addInfo")}
+              </div>
+            )}
 
             {/* ERRORS FOR INPUT */}
             {errors.IIN && <p className="text-danger">{errors.IIN.message}</p>}

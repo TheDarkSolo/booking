@@ -48,7 +48,7 @@ export default function Home() {
                     className="p-3"
                     height={150}
                   />
-                  <h3 className="text-dark">{t("menu.0.menu_name")}</h3>
+                  <h3 className="text-dark text-center">{t("menu.0.menu_name")}</h3>
                 </div>
               </Link>
             </div>

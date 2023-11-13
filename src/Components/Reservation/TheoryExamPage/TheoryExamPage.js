@@ -71,6 +71,13 @@ const TheoryExamPage = () => {
 
   const token = useSelector(state => state.token.token)
 
+
+  const [showInfo, setShowInfo] = useState(false);
+
+  const toggleInfo = () => {
+    setShowInfo(!showInfo);
+  };
+
   const {
     register,
     handleSubmit,
@@ -274,7 +281,13 @@ const TheoryExamPage = () => {
             className={messageBlock ? "hide" : "form_input"}
             onSubmit={handleSubmit(getMessage)}
           >
-            <p className="text-center mt-5">{t("head_text_input")}</p>
+
+
+            <p className="text-center mt-5">
+              {t("head_text_input")}
+            </p>
+
+
             {/* INPUT TICKET */}
             <input
               className="form-control input_w my-2"
@@ -291,7 +304,62 @@ const TheoryExamPage = () => {
               })}
             />
 
-            <input
+
+            <div className="input-container">
+              <input
+                className="form-control input_w my-2"
+                placeholder={t("applicationNumber")}
+                maxLength="12"
+                minLength="12"
+                name="APP_NUMBER"
+                {...register("APP_NUMBER", {
+                  required: "Введите ваш номер заявки",
+                  pattern: {
+                    value: /^(009|004)[0-9]{9}$/,
+                    message: "Номер заявки должен состоять из 12 цифр и начинаться с 009 или 004",
+                  },
+                })}
+              />
+              <span onClick={toggleInfo} className="info-icon">
+                ℹ️
+              </span>
+
+            </div>
+            {showInfo && (
+              <div className="info-message">
+                {t("addInfo")}
+              </div>
+            )}
+
+            {/* <div className="input-container">
+              <input
+                className="form-control input_w my-2"
+                placeholder={t("applicationNumber")}
+                maxLength="12"
+                minLength="12"
+                name="APP_NUMBER"
+                {...register("APP_NUMBER", {
+                  required: "Введите ваш номер заявки",
+                  pattern: {
+                    value: /^(009|004)[0-9]{9}$/,
+                    message: "Номер заявки должен состоять из 12 цифр и начинаться с 009 или 004",
+                  },
+                })}
+              />
+              <i
+                className="icon-info"
+                onMouseEnter={() => setShowTooltip(true)}
+                onMouseLeave={() => setShowTooltip(false)} // Make sure to add this line
+              >
+                ℹ️
+              </i>
+              {showTooltip && (
+                <div className="tooltip">Additional info</div>
+              )}
+            </div> */}
+
+
+            {/* <input
               className="form-control input_w my-2"
               placeholder={t("applicationNumber")}
               maxLength="12"
@@ -304,7 +372,14 @@ const TheoryExamPage = () => {
                   message: "Номер заявки должен состоять из 12 цифр и начинаться с 009 или 004",
                 },
               })}
-            />
+            /> */}
+
+
+
+
+
+
+
 
             {/* ERRORS FOR INPUT */}
             {errors.IIN && <p className="text-danger">{errors.IIN.message}</p>}

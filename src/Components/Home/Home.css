@@ -1,0 +1,150 @@
+.main {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.header_text_block {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin: 12px 0px;
+  align-items: center;
+  padding: 0% 15% 0px;
+}
+
+.header_link {
+  padding: 0% 15% 0px;
+  font-family: "Montserrat";
+}
+
+.header_text_block_item {
+  display: flex;
+  width: 65%;
+}
+
+.header_text_block_item:nth-child(2) {
+  justify-content: flex-end;
+  width: 35%;
+}
+
+.header_text {
+  font-family: "Montserrat";
+  font-size: 36px;
+  line-height: 30px;
+  font-weight: bold;
+  text-align: left;
+  /* color: #36975a; */
+}
+
+.driver_img {
+  display: flex;
+  width: 100%;
+  transition: 0.3s;
+  align-items: flex-end;
+}
+
+.driver_img_hidden {
+  display: none;
+}
+
+.menu {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-top: 36px;
+  /* padding: 0px 15% 0px; */
+}
+
+/* Basic styles for the footer */
+.footer-row {
+  width: 100%;
+  background-color: #ffffff;
+  /* replace with your preferred color */
+  margin-bottom: 0;
+}
+
+.footer-row .row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 0 15%;
+}
+
+.header-row-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.logo2 {
+  height: 65px;
+  /* replace with your preferred size */
+  width: 65px;
+  /* replace with your preferred size */
+}
+
+/* goscorp prav dlya grazhdan text v footere */
+.text {
+  margin-left: 0;
+  /* remove the left margin */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: left;
+}
+
+.logo-text-block {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  /* adjust this to control the spacing between the logo and the text */
+}
+
+.social {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  /* width: 150px; replace with your preferred size */
+}
+
+.call-center {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  /* width: 150px; replace with your preferred size */
+}
+
+.lonely-call {
+  font-size: 2em;
+  color: green;
+}
+
+.call-top-text {
+  font-size: 0.8em;
+}
+
+@media (max-width: 768px) {
+  .header_text {
+    font-size: 16px;
+    text-align: center;
+  }
+
+  .header_text_block {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .header-row-top {
+    flex-direction: column; /* Stack elements in a column */
+    align-items: center;
+  }
+
+  .social, .call-center {
+    margin-left: 0; /* Remove any margin that would align them next to the logo */
+  }
+}

@@ -1,0 +1,28 @@
+.kaspi-qr-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    font-family: 'Arial', sans-serif;
+  }
+  
+.kaspi-qr-logo-text {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Space between the QR logo and the title */
+  }
+  
+.kaspi-qr-title {
+    font-size: 40px; /* Larger font size for the title */
+    font-weight: bold;
+    margin: 0;
+    color: #000000; /* Black color for the title */
+  }
+  
+.kaspi-qr-subtitle {
+    font-size: 23px; /* Font size for the subtitle */
+    font-weight: bold;
+    color: #000000; /* Black color for the subtitle */
+    margin-top: 8px; /* Space between title and subtitle */
+  }
+  

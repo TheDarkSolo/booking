@@ -16,6 +16,8 @@ import ModalTheoryExam from "../../Modal/ModalTheoryExam";
 import OTPInput, { ResendOTP } from "otp-input-react";
 
 import ModalActiveTicket from "../../Modal/ModalActiveTicket";
+import ModalErrorMessage from "../../Modal/ModalErrorMessage";
+
 
 import appStore from "../../../assets/images/appStore.png";
 import googlePlay from "../../../assets/images/googlePlay.png";
@@ -80,6 +82,9 @@ const PracticeExamPage = () => {
 
   const [showInfo, setShowInfo] = useState(false);
 
+  const [modalErrorMessage, setModalErrorMessage] = useState("");
+  const [showModalError, setShowModalError] = useState(false);
+
   const toggleInfo = () => {
     setShowInfo(!showInfo);
   };
@@ -137,87 +142,58 @@ const PracticeExamPage = () => {
   const sendVerifyCodeApplicant = async (verify_code, token) => {
     const url = "/api/verify/";
 
-    const storageData = sessionStorage.getItem("iin");
-    const storageData2 = sessionStorage.getItem("app_number");
+    const storageData = JSON.parse(sessionStorage.getItem("iin"));
+    const storageData2 = JSON.parse(sessionStorage.getItem("app_number"));
 
-    const obj = {
-      "iin": JSON.parse(storageData),
-      "app_number": JSON.parse(storageData2),
-      "code": verify_code,
-    }
-
-    let myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
-
-    let raw = JSON.stringify({
-      iin: JSON.parse(storageData),
-      app_number: JSON.parse(storageData2),
-      code: verify_code
-    });
-
-    fetch(url, {
-      headers: myHeaders,
+    const requestOptions = {
       method: "POST",
-      body: raw
-    }).then((response) => {
-      if (response.ok) {
-        return response.json();
-      }
-      else {
-        setResponseError(true);
-        throw new Error(`INITIAL Request failed with status code ${response.status}`);
-      }
-    })
-      .then((data) => {
-        if (data.error) {
-          if (data.error === false) {
-            //SHOW ERROR APPLICANT INPUT WRONG VERIFY CODE
-            setMessageBlock(true);
-            setIsWrongCode(true);
-            setOTP("");
-          } else {
-            //SHOW ERROR IF APPLICANT NOT PASS THEORY EXAM
-            // setIsVerify(true)
-            if (data.error == "У заявителя есть активные экзамены.") { // assuming the server returns this data
-              setHasActiveTicket(true);
-              if (data.exam_data) {
-                sessionStorage.setItem("exam_data", JSON.stringify(data.exam_data));
-                setExamData(data.exam_data);
-                setHasActiveTicket(true);
-              }
-            } else {
-              if (data.error == "The application number has expired.") {
-                setExpiredAppNumber(true);
-              } else {
-                if (data.error == "The applicant number is incorrect") {
-                  setIncorrectAppNumber(true);
-                } else {
-                  setMessageBlock(false);
-                  setNotPassExam(true);
-                  setOTP("");
-                  //console.log(data.error); 
-                  // console.log(data) 
-                }
-              }
-            }
-          }
-        } //tut if(data.error) cancels
-        //OK
-        else {
-          //console.log(data);
-          setNotPassExam(false);
-          setIsVerify(true);
-          dispatch(setDataUser(data));
-          setMessageBlock(false);
-          setOTP("");
-          // console.log(3)
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        iin: storageData,
+        app_number: storageData2,
+        code: verify_code,
+      }),
+    };
+
+    try {
+      const response = await fetch(url, requestOptions);
+
+      // if (!response.ok) {
+      //   setResponseError(true);
+      //   throw new Error(`Request failed with status code ${response.status}`);
+      // }
+
+      const data = await response.json();
+
+      if (data.error === false || data.error === 'false') {
+        // Handle wrong OTP
+        setMessageBlock(true);
+        setIsWrongCode(true);
+        setOTP("");
+      } else if (data.error === "У заявителя есть активные экзамены.") {
+        // Existing code
+        setHasActiveTicket(true);
+        if (data.exam_data) {
+          sessionStorage.setItem("exam_data", JSON.stringify(data.exam_data));
+          setExamData(data.exam_data);
         }
-        // } 
-      })
-    /*.catch(function (res) {
-      console.log(res,'\texcept');
-      return res
-    });*/
+      } else if (data.error) {
+        // Show backend response in modal
+        setModalErrorMessage(data.error);
+        setShowModalError(true);
+      } else {
+        // Success case
+        setNotPassExam(false);
+        setIsVerify(true);
+        dispatch(setDataUser(data));
+        setMessageBlock(false);
+        setOTP("");
+      }
+    } catch (error) {
+      console.error("An error occurred during verification:", error);
+    }
   };
 
   // IF THE TIMER IS OUT OF TIME TOOGLE DISABLED BUTTON "Забронировать"
@@ -472,6 +448,14 @@ const PracticeExamPage = () => {
         setHasActiveTicket={setHasActiveTicket}
         examData={examData} // Pass the examData prop here
       />
+
+      {showModalError && (
+        <ModalErrorMessage
+          isOpen={showModalError}
+          onClose={() => setShowModalError(false)}
+          message={modalErrorMessage}
+        />
+      )}
 
     </div>
   );

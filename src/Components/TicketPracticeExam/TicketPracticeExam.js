@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import html2pdf from "html2pdf.js";
 import { useTranslation } from "react-i18next";
 import './TicketPracticeExam.css';
+
 import { Trans } from 'react-i18next';
 
 
@@ -78,7 +79,7 @@ export default function TicketPracticeExam() {
               {t("department")}:&nbsp;
               {/* Отделение:  */}
               <span className="fw-bold">
-                <span className="fw-bold">{department}</span>
+                <span className="fw-bold">{user?.department}</span>
               </span>
             </span>
           </label>
@@ -133,7 +134,7 @@ export default function TicketPracticeExam() {
               {t("talonAddress")}
               {/* Адрес: */}
             </span>
-            <span className="fw-bold mx-2">{address}</span>
+            <span className="fw-bold mx-2">{user?.address}</span>
           </div>
 
           <p className="text-center text-muted fw-bold mt-4">

@@ -89,23 +89,23 @@ export default function TicketTheoryExam() {
               {t("department")}:&nbsp;
               {/* Отделение:  */}
               <span className="fw-bold">
-                <span className="fw-bold">{department}</span>
+                <span className="fw-bold">{user?.department}</span>
               </span>
             </span>
           </label>
 
 
-          <label className="my-2">
+          {/* <label className="my-2">
             <span className="ticket_text_aside">
-              {t("talonServiceType")}
-              {/* Тип услуги:  */}
-              <b>
+              {t("talonServiceType")} */}
+          {/* Тип услуги:  */}
+          {/* <b>
                 {user?.serviceID === "I03-21" ? t("textTheory1") : user?.serviceID === "I03-22" ? t("textTheory2") :
                   user?.serviceID === "I03-22" ? t("textTheory3") : user?.serviceID === "I10-1" ? t("textTheory4") : ""}
               </b>
               <span className="fw-bold"></span>
             </span>
-          </label>
+          </label> */}
 
 
 
@@ -132,7 +132,7 @@ export default function TicketTheoryExam() {
               {t("talonAddress")}
               {/* Адрес: */}
             </span>
-            <span className="fw-bold mx-2">{address}</span>
+            <span className="fw-bold mx-2">{user?.address}</span>
           </div>
 
           <p className="text-center text-muted fw-bold mt-4">

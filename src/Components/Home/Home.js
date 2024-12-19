@@ -13,6 +13,13 @@ import "./Home.css";
 
 import logo from "../../assets/images/logo.jpg";
 
+import reservePractice from '../../assets/images/reservePractice2.png'
+import reserveTheory from '../../assets/images/reserveTheory2.png'
+import reserveTrial from '../../assets/images/reserveTrial.png'
+import reserveMarriage from '../../assets/images/wedding_icon.png'
+import reserveTrialTheory from '../../assets/images/reserveTrialTheory.svg'
+
+
 export default function Home() {
   const { t } = useTranslation();
 
@@ -36,43 +43,66 @@ export default function Home() {
           />
         </div>
       </div>
-      <a href="https://www.gov.kz/uploads/2023/11/22/b22df9370ac12734f9616f93c9741865_original.46379170.pdf" download className="header_link" style={{ color: '#0F914C' }}>
-        {t("testsPdd")}
-      </a>
-      <div style={{ padding: '0% 15% 0px' }} className="bg-white py-5">
-        <div class="container overflow-hidden">
-          <div class="row gx-5">
-            <div class="col">
-              <Link to={"/reservation"}>
-                <div class="p-4 rounded d-flex flex-column align-items-center border bg-white cursor-pointer mb-2">
-                  <img
-                    src={t("menu.0.menu_img")}
-                    alt="водительское удостоверения"
-                    className="p-3"
-                    height={150}
-                  />
-                  <h3 className="text-dark text-center">{t("menu.0.menu_name")}</h3>
-                </div>
-              </Link>
-            </div>
-            <div class="col">
-              <Link to={"/stream"}>
-                {/* <a href="https://egov.kz/cms/kk/articles/poluchenie_pravab" target="_blank" rel="noopener noreferrer"> */}
-                <div class="p-4 rounded d-flex flex-column align-items-center border bg-white cursor-pointer mb-2">
-                  <img
-                    src={t("menu.1.menu_img")}
-                    alt="водительское удостоверения"
-                    className="p-3"
-                    height={150}
-                  />
-                  <h3 className="text-dark">{t("menu.1.menu_name")}</h3>
-                </div>
-              </Link>
-              {/* </a> */}
-            </div>
+
+      <div className="service-panel-container py-5">
+        <div className="service-panel">
+
+          <div className="service-item">
+            <Link to="/theory-exam" className="service-card">
+              <img src={reserveTheory} className="service-icon" style={{ width: '120px' }} />
+              <p className="service-text">{t("btn_title_reservation_theory_exam")}</p>
+            </Link>
+          </div>
+
+          <div className="service-item">
+            <Link to="/practice-exam" className="service-card">
+              <img src={reservePractice} className="service-icon" style={{ width: '130px', marginTop: '2%' }} />
+              <p className="service-text">{t("btn_title_reservation_practice_exam")}</p>
+            </Link>
+          </div>
+
+          <div className="service-item">
+            <Link to="/trial-exam" className="service-card">
+              <img src={reserveTrial} className="service-icon" />
+              <p className="service-text">{t("btn_title_reservation_trial_exam")}</p>
+            </Link>
+          </div>
+
+          <div className="service-item">
+            <a
+              href="https://testing.gov4c.kz/index.php/user/auth"
+              className="service-card"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img src={reserveTrialTheory} className="service-icon" alt="Service Icon" />
+              <p className="service-text">
+                {t("btn_title_reservation_trialTheory_exam")}
+              </p>
+            </a>
+          </div>
+
+          <div className="service-item">
+            <Link to="/marriage" className="service-card">
+              <img src={reserveMarriage} className="service-icon" />
+              <p className="service-text">{t("btn_title_reservation_marriage")}</p>
+            </Link>
+          </div>
+
+          <div className="service-item">
+            <Link to="/stream" className="service-card">
+              <img
+                src={t("menu.1.menu_img")}
+                alt="водительское удостоверение"
+                className="service-icon"
+              />
+              <p className="service-text">{t("menu.1.menu_name")}</p>
+            </Link>
           </div>
         </div>
       </div>
+
+
 
 
 

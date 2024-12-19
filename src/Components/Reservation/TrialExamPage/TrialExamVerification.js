@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
+import ModalErrorMessage from "../../Modal/ModalErrorMessage";
 
 
 function TrialExamVerification() {
@@ -16,6 +17,7 @@ function TrialExamVerification() {
     const { t } = useTranslation();
     const navigate = useNavigate();
 
+
     //GET APPLICANT INFO FROM REDUX
     const userData = useSelector((state) => state.userData.userData);
     const [departmentId, setDepartmentId] = useState(userData.department_id);
@@ -25,6 +27,9 @@ function TrialExamVerification() {
     const [errorText, setErrorText] = useState("");
     //SHOW ERROR IF APPLICANT NOT PASS THEORY EXAM
     const [notTheoryExam, setNotTheoryExam] = useState("");
+
+    const [modalErrorMessage, setModalErrorMessage] = useState("");
+    const [showModalError, setShowModalError] = useState(false);
 
     // APPLICANT SELECTED DATE AND TIME SEND DATA
     const handleSubmitTrialExam = () => {
@@ -62,7 +67,10 @@ function TrialExamVerification() {
             .then((res) => {
                 //IF APPLICANT ENROLLED TO PRACTICE EXAM
                 if (res.enrolled) {
-                    navigate("/reservation/trial-exam/payment");
+                    navigate("/trial-exam/payment");
+                } else if (res.error) {
+                    setModalErrorMessage(res.error);
+                    setShowModalError(true);
                 }
                 //APPLICANT NOT ENRLLED GET ERROR FROM SERVER PROBABLY NEED TO BE WRITTEN IF ERROR
             })
@@ -220,6 +228,15 @@ function TrialExamVerification() {
                         {/* Подтвердить */}
                     </button>
                 </center>
+
+                {showModalError && (
+                    <ModalErrorMessage
+                        isOpen={showModalError}
+                        onClose={() => setShowModalError(false)}
+                        message={modalErrorMessage}
+                    />
+                )}
+
             </div >
         </>
     );

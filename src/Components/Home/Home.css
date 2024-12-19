@@ -39,7 +39,7 @@
 
 .driver_img {
   display: flex;
-  width: 100%;
+  width: 50%;
   transition: 0.3s;
   align-items: flex-end;
 }
@@ -128,23 +128,145 @@
   font-size: 0.8em;
 }
 
+
+.service-panel-container {
+  padding: 0% 15% 0px;
+  background-color: #fff;
+}
+
+.service-panel {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  /* Three items per row */
+  gap: 20px;
+}
+
+.service-item {
+  display: flex;
+  justify-content: center;
+}
+
+.service-card {
+  padding: 20px;
+  border-radius: 10px;
+  background-color: #fff;
+  border: 1px solid #eaeaea;
+  text-align: center;
+  transition: box-shadow 0.3s ease;
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  /* This will space the content evenly */
+}
+
+.service-card:hover {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.service-icon {
+  width: 100px;
+  height: auto;
+  margin-bottom: 15px;
+}
+
+.service-text {
+  font-size: 16px;
+  color: #666;
+  margin-top: 10px;
+}
+
 @media (max-width: 768px) {
+  .header {
+    padding: 10px;
+  }
+
+  .driver_img {
+    width: 100%;
+  }
+
   .header_text {
-    font-size: 16px;
+    font-size: 20px;
     text-align: center;
   }
 
   .header_text_block {
     flex-direction: column;
     align-items: center;
+    padding: 0;
   }
 
   .header-row-top {
-    flex-direction: column; /* Stack elements in a column */
+    flex-direction: column;
+    /* Stack elements in a column */
     align-items: center;
   }
 
-  .social, .call-center {
-    margin-left: 0; /* Remove any margin that would align them next to the logo */
+  .footer-row {
+    padding: 10px;
+  }
+
+  .footer-row .row {
+    padding: 10px;
+  }
+
+  .social,
+  .call-center {
+    margin-left: 0;
+    /* Remove any margin that would align them next to the logo */
+  }
+
+  .service-panel-container {
+    padding: 10px;
+    /* Reduce padding for smaller screens */
+  }
+
+  .service-panel {
+    display: grid;
+    grid-template-columns: auto auto;
+    /* Two items per row */
+    gap: 10px;
+    /* Adjust the gap between items */
+  }
+
+  .service-item {
+    display: flex;
+    justify-content: center;
+  }
+
+  .service-card {
+    padding: 15px;
+    /* Reduce padding for smaller screens */
+    border-radius: 10px;
+    background-color: #fff;
+    border: 1px solid #eaeaea;
+    text-align: center;
+    transition: box-shadow 0.3s ease;
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    /* Distribute content evenly */
+  }
+
+  .service-icon {
+    width: 80px;
+    /* Smaller icons for tablet and mobile */
+    height: auto;
+    margin-bottom: 10px;
+    /* Slightly reduce bottom margin */
+  }
+
+  .service-text {
+    font-size: 14px;
+    /* Smaller text for smaller screens */
+    color: #666;
+    margin-top: 10px;
   }
 }

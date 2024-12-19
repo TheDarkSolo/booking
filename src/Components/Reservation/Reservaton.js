@@ -6,6 +6,7 @@ import reservePractice from '../../assets/images/reservePractice2.png'
 import reserveTheory from '../../assets/images/reserveTheory2.png'
 import reserveTrial from '../../assets/images/reserveTrial.png'
 import reserveMarriage from '../../assets/images/wedding_icon.png'
+import reserveTrialTheory from '../../assets/images/reserveTrialTheory.svg'
 import { IoIosArrowBack } from 'react-icons/io'
 import token, { setToken } from "../../store/slices/token";
 
@@ -28,7 +29,7 @@ const Reservation = () => {
       <center>
         <div className="reservationPanels">
           <div>
-            <Link className="reservationPanel" to="/reservation/theory-exam">
+            <Link className="reservationPanel" to="/theory-exam">
               <img src={reserveTheory} className="menu_choice_img" />
               <p className="reservationText">
                 {/* Theory button */}
@@ -37,7 +38,7 @@ const Reservation = () => {
           </div>
 
           <div>
-            <Link className="reservationPanel" to="/reservation/practice-exam">
+            <Link className="reservationPanel" to="/practice-exam">
               <img src={reservePractice} className="menu_choice_img" />
               <p className="reservationText">
                 {/* Practice button */}
@@ -46,7 +47,7 @@ const Reservation = () => {
           </div>
 
           <div>
-            <Link className="reservationPanel" to="/reservation/trial-exam">
+            <Link className="reservationPanel" to="/trial-exam">
               <img src={reserveTrial} className="menu_choice_img" />
               <p className="reservationText">
                 {/* Trial button */}
@@ -55,7 +56,16 @@ const Reservation = () => {
           </div>
 
           <div>
-            <Link className="reservationPanel" to="/reservation/marriage">
+            <Link className="reservationPanel" to="/trial-theory">
+              <img src={reserveTrialTheory} className="menu_choice_img" />
+              <p className="reservationText">
+                {/* Trial button */}
+                {t("btn_title_reservation_trialTheory_exam")}</p>
+            </Link>
+          </div>
+
+          <div>
+            <Link className="reservationPanel" to="/marriage">
               <img src={reserveMarriage} className="menu_choice_img" />
               <p className="reservationText">
                 {/* Marriage button */}

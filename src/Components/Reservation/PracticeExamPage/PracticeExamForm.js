@@ -12,6 +12,7 @@ import { useTranslation } from "react-i18next";
 
 
 const PracticeExamForm = () => {
+  const [shouldRender, setShouldRender] = useState(false);
   const { t } = useTranslation()
   //LOADING ANIMATION
   const [loading, setLoading] = useState(false);
@@ -29,7 +30,7 @@ const PracticeExamForm = () => {
   //SET EXAMID
   const [examId, setExamId] = useState(null);
   //SELECTED KPP IF APPLICANT HAVE CATEGORY "B"
-  const [kppApp, setKPP] = useState("MT");
+  const [kppApp, setKPP] = useState("");
   //SET ERROR WHEN SEND DATA AND TIME FOR RESERVATION
   const [errorText, setErrorText] = useState("");
   //SHOW ERROR IF APPLICANT NOT PASS THEORY EXAM
@@ -217,6 +218,9 @@ const PracticeExamForm = () => {
     setDepartments(data);
   };
 
+  // console.log("user", user); //comes from verify
+  // console.log("userData", userData); //comes from sessionStorage
+
   //GET FREE PRACTICE EXAM
   const getFreeExamPractice = async (kpp) => {
     const url = "/api/practice/free/exams/";
@@ -299,7 +303,7 @@ const PracticeExamForm = () => {
   // };
 
   const postUserExamData = (user_exam_data) => {
-    navigate("/reservation/practice-exam/verification");
+    navigate("/practice-exam/verification");
   };
 
   useEffect(() => {
@@ -308,6 +312,8 @@ const PracticeExamForm = () => {
     //getFreeExamPractice(userData.department_code, token.access);
     if (userData.category !== 'B') {
       onChangeSelectKPP("MT");
+    } else {
+      onChangeSelectKPP(userData.transmission);
     }
     // Fetching data for dropdowns // NEW MENU FUNCTIONS
     fetchCities();
@@ -337,9 +343,12 @@ const PracticeExamForm = () => {
             {t("selectCity")}
           </label>
           <select className="form-select" id="city-select" onChange={(e) => onChangeCity(e.target.value)}>
-            {cities.map((city) => (
-              <option key={city.id} value={city.id} selected={city.name == userData.city}>{city.name}</option>
-            ))}
+            {/* {cities.map((city) => ( */}
+            <option
+            // key={city.id} value={city.id} selected={city.name == userData.city}
+            >
+              {userData.city}</option>
+            {/* ))} */}
           </select>
         </div>
 
@@ -351,20 +360,20 @@ const PracticeExamForm = () => {
 
           </label>
           <select className="form-select" id="department-select" onChange={(e) => onChangeSelectDepartment(e.target.value)}>
-            <option selected disabled value="">
+            {/* <option selected disabled value="">
               {t("selectDepartment")}
-            </option>
-            {departments
+            </option> */}
+            {/* {departments
               .filter((department) => department.city == document.getElementById('city-select').value)
-              .map((department) => (
-                <option
-                  key={department.id}
-                  value={department.id}
-                /*selected={department.id == userData.department_id}*/
-                >
-                  {department.name}
-                </option>
-              ))}
+              .map((department) => ( */}
+            <option
+            //key={department.id}
+            //value={department.id}
+            /*selected={department.id == userData.department_id}*/
+            >
+              {userData.department}
+            </option>
+            {/* ))} */}
             {/*departments.map((department) => (
               <option key={department.id} value={department.id} selected={department.id == userData.department_id}>{department.name}</option>
             ))*/}
@@ -372,43 +381,48 @@ const PracticeExamForm = () => {
         </div>
 
         {/* ================SELECT CATEGORY================ */}
-
         <div className="form-group mb-3">
           <label for="category-select" className="fs-5">
             {/*Выберите категорию*/}
             {t("selectCategory")}
           </label>
-          <select className="form-select" id="category-select" {...register("selectCategory", { required: true })} onChange={(e) => onChangeSelectCategory(e.target.value)}>
-            {categories.map((category) => (
-              <option value={category} selected={category == userData.category}>{category}</option>
-            ))}
+          <select className="form-select" id="category-select"
+            {...register("selectCategory", { required: true })} onChange={(e) => onChangeSelectCategory(e.target.value)}>
+            {/* {categories.map((category) => ( */}
+            <option
+            // value={category} selected={category == userData.category}
+            >
+              {userData.category}</option>
+            {/* ))} */}
           </select>
           {/* <small className="text-danger fs-5">
             Предупреждение категория
-             {t("warningCategory")} 
+             {t("warningCategory")}
         </small> */}
         </div>
 
-        {category === "B" && (<div className="form-group mb-3">
+        <div className="form-group mb-3">
           <label for="kpp-select" className="fs-5">
             {/* ВидКПП */}
             {t("typeKPP")}
           </label>
           <select className="form-select" id="kpp-select" onChange={(e) => onChangeSelectKPP(e.target.value)}>
-            {<option selected disabled value="MT">
-              {/* Выберите КПП */}
-              {t("selectKPP")}</option>}
-            <option value="MT">Механика </option>
-            <option value="AT">Автомат</option>
+            {/* {<option selected disabled value="MT"> */}
+            {/* Выберите КПП */}
+            {/* {t("selectKPP")}</option>} */}
+            {/* <option value="MT">Механика </option>
+            <option value="AT">Автомат</option> */}
+            <option>{userData.transmission}</option>
           </select>
 
-          <small className="text-danger fs-5">
-            {/*Пожалуйста, выберите указанный при регистрации вид КПП.*/}
-            {t("warningKPP")}
-          </small>
-        </div>)
-        }
+          {/* <small className="text-danger fs-5"> */}
+          {/*Пожалуйста, выберите указанный при регистрации вид КПП.*/}
+          {/* {t("warningKPP")}
+          </small> */}
+        </div>
 
+        {/* <div>
+          {shouldRender && (<div> */}
         {/*Кнопка Выбрать дату*/}
         <center>
           <button
@@ -421,7 +435,10 @@ const PracticeExamForm = () => {
             {t("selectDateButton")}
           </button>
         </center>
-
+        {/* </div>
+         )
+           }
+       </div> */}
 
         {/* ===========ВЫБЕРИТЕ ДАТУ============== */}
         {dateBlock && (
@@ -449,8 +466,6 @@ const PracticeExamForm = () => {
                     </option>
                   ))
                 )}
-
-
               </select>
 
               {/* ERROR*/}

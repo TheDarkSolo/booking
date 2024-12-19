@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import ModalExamBooked from "../../Modal/ModalExamBooked";
+import ModalErrorMessage from "../../Modal/ModalErrorMessage";
 
 
 function TheoryExamVerification() {
@@ -17,6 +18,8 @@ function TheoryExamVerification() {
     const [address, setAddress] = useState(null);
     const { t } = useTranslation();
     const navigate = useNavigate();
+    const [modalErrorMessage, setModalErrorMessage] = useState("");
+    const [showModalError, setShowModalError] = useState(false);
 
     //GET APPLICANT INFO FROM REDUX
     const userData = useSelector((state) => state.userData.userData);
@@ -25,10 +28,7 @@ function TheoryExamVerification() {
     const [kppApp, setKPP] = useState("MT");
     //SET ERROR WHEN SEND DATA AND TIME FOR RESERVATION
     const [errorText, setErrorText] = useState("");
-    //SHOW ERROR IF APPLICANT NOT PASS THEORY EXAM
-    const [notTheoryExam, setNotTheoryExam] = useState("");
-
-    //SHOW ERROR IF EXAM BOOKED
+    // SHOW MODAL IF EXAM BOOKED
     const [examBooked, setExamBooked] = useState(false);
 
     //APPLICANT SELECTED DATE AND TIME SEND DATA
@@ -64,14 +64,14 @@ function TheoryExamVerification() {
             .then((res) => {
                 //IF APPLICANT ENROLLED TO PRACTICE EXAM
                 if (res.enrolled) {
-                    sessionStorage.setItem("appNumber", JSON.stringify(res.app_number));
-                    navigate("/reservation/theory-exam/ticket");
+                    // sessionStorage.setItem("appNumber", JSON.stringify(res.app_number));
+                    navigate("/theory-exam/ticket");
 
                 }
                 //APPLICANT NOT ENRLLED GET ERROR FROM SERVER
-                else if (res.error == "Данный экзамен уже забронирован. Пожалуйста выберите другую дату") {
-                    console.log("examBooked:", res.error);
-                    setExamBooked(true);
+                else if (res.error) {
+                    setModalErrorMessage(res.error);
+                    setShowModalError(true);
                 }
             })
             .catch(function (res) {
@@ -108,6 +108,10 @@ function TheoryExamVerification() {
             }
         }
 
+
+        // console.log("user", user); comes from verify
+        // console.log("userData", userData); comes from sessionStorage
+
     }, []);
 
     return (
@@ -142,7 +146,8 @@ function TheoryExamVerification() {
                             {t("department")}:&nbsp;
                             {/* Отделение:  */}
                             <span className="fw-bold">
-                                <span className="fw-bold">{department}</span>
+                                <span className="fw-bold">{user?.department}</span>
+
                             </span>
                         </span>
                     </label>
@@ -175,12 +180,12 @@ function TheoryExamVerification() {
             </p>
 
             <center>
-                <button type="button" className="btn btn-danger mb-4" onClick={() => window.location.href = 'https://booking.gov4c.kz/'}>
+                <button type="button" className="btn btn-danger" onClick={() => window.location.href = 'https://booking.gov4c.kz/'}>
                     {t("verificationDecline")}
                     {/* Отменить */}
                 </button>
 
-                <br></br>
+
 
                 <button
                     type="button"
@@ -195,6 +200,14 @@ function TheoryExamVerification() {
             </center>
 
             <ModalExamBooked examBooked={examBooked} setExamBooked={setExamBooked} />
+
+            {showModalError && (
+                <ModalErrorMessage
+                    isOpen={showModalError}
+                    onClose={() => setShowModalError(false)}
+                    message={modalErrorMessage}
+                />
+            )}
         </>
     );
 }

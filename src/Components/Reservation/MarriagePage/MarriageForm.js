@@ -283,7 +283,7 @@ const MarriageForm = () => {
   };
 
   const postUserExamData = (user_exam_data) => {
-    navigate("/reservation/marriage/verification");
+    navigate("/marriage/verification");
   };
 
   useEffect(() => {

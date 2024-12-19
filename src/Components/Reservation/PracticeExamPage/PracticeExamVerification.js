@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import ModalTheoryExam from "../../Modal/ModalTheoryExam";
 import ModalExamBooked from "../../Modal/ModalExamBooked";
+import ModalErrorMessage from "../../Modal/ModalErrorMessage";
 
 function PracticeExamVerification() {
     const [user, setUser] = useState(null);
@@ -16,6 +17,9 @@ function PracticeExamVerification() {
     const [department, setDepartment] = useState(null);
     const { t } = useTranslation();
     const navigate = useNavigate();
+    const [modalErrorMessage, setModalErrorMessage] = useState("");
+    const [showModalError, setShowModalError] = useState(false);
+
 
     //GET APPLICANT INFO FROM REDUX
     const userData = useSelector((state) => state.userData.userData);
@@ -65,14 +69,13 @@ function PracticeExamVerification() {
                 //IF APPLICANT ENROLLED TO PRACTICE EXAM
                 if (res.enrolled) {
                     sessionStorage.setItem("appNumber", JSON.stringify(res.app_number));
-                    navigate("/reservation/practice-exam/ticket");
+                    navigate("/practice-exam/ticket");
 
                 }
                 //APPLICANT NOT ENRLLED GET ERROR FROM SERVER
-                else if (res.error == "Заявитель не сдал теоретический экзамен") {
-                    setNotPassExam(true);
-                } else {
-                    setExamBooked(true);
+                else if (res.error) {
+                    setModalErrorMessage(res.error);
+                    setShowModalError(true);
                 }
             })
             .catch(function (res) {
@@ -135,7 +138,7 @@ function PracticeExamVerification() {
                                 {t("department")}:&nbsp;
                                 {/* Отделение:  */}
                                 <span className="fw-bold">
-                                    <span className="fw-bold">{department}</span>
+                                    <span className="fw-bold">{user?.department}</span>
                                 </span>
                             </span>
                         </label>
@@ -209,6 +212,15 @@ function PracticeExamVerification() {
 
                 <ModalTheoryExam notPassExam={notPassExam} setNotPassExam={setNotPassExam} />
                 <ModalExamBooked examBooked={examBooked} setExamBooked={setExamBooked} />
+
+                {showModalError && (
+                    <ModalErrorMessage
+                        isOpen={showModalError}
+                        onClose={() => setShowModalError(false)}
+                        message={modalErrorMessage}
+                    />
+                )}
+
             </div>
         </>
     );

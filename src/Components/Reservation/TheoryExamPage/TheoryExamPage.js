@@ -19,6 +19,8 @@ import "./TheoryExamPage.css";
 import appStore from "../../../assets/images/appStore.png";
 import googlePlay from "../../../assets/images/googlePlay.png";
 
+import ModalErrorMessage from "../../Modal/ModalErrorMessage";
+
 //REDUX
 import { setDataUser } from "../../../store/slices/userDataSlice";
 
@@ -76,9 +78,10 @@ const TheoryExamPage = () => {
 
   const token = useSelector(state => state.token.token)
 
-
-
   const [showInfo, setShowInfo] = useState(false);
+
+  const [modalErrorMessage, setModalErrorMessage] = useState("");
+  const [showModalError, setShowModalError] = useState(false);
 
   const toggleInfo = () => {
     setShowInfo(!showInfo);
@@ -99,7 +102,7 @@ const TheoryExamPage = () => {
   const dispatch = useDispatch();
   const { btoa } = window;
   //SEND IIN TO DATABASE TO VERIFY USER
-  const verifyUser = async (iin, app_number, token) => {
+  const verifyUser = async (iin, app_number) => {
     try {
       const response = await fetch(`/api/t1/theory/verify/${iin}/`, {
         method: 'GET',
@@ -162,24 +165,18 @@ const TheoryExamPage = () => {
         setMessageBlock(true);
         setIsWrongCode(true);
         setOTP("");
-      } else if (data.error) {
-        // Handle error cases
-        if (data.error === "У заявителя есть активные экзамены.") {
+      } else if (data.error === "У заявителя есть активные экзамены.") {
+        // Existing code remains the same
+        setHasActiveTicket(true);
+        if (data.exam_data) {
+          sessionStorage.setItem("exam_data", JSON.stringify(data.exam_data));
+          setExamData(data.exam_data);
           setHasActiveTicket(true);
-          if (data.exam_data) {
-            sessionStorage.setItem("exam_data", JSON.stringify(data.exam_data));
-            setExamData(data.exam_data);
-            setHasActiveTicket(true);
-          }
-        } else if (data.error === "The application number has expired.") {
-          setExpiredAppNumber(true);
-        } else if (data.error === "The applicant number is incorrect") {
-          setIncorrectAppNumber(true);
-        } else {
-          setMessageBlock(false);
-          setNotPassExam(true);
-          setOTP("");
         }
+      } else if (data.error) {
+        // Show the backend response in a modal window
+        setModalErrorMessage(data.error);
+        setShowModalError(true);
       } else {
         // Handle success case
         setNotPassExam(false);
@@ -190,7 +187,7 @@ const TheoryExamPage = () => {
       }
     } catch (error) {
       console.error("An error occurred during verification:", error);
-      // Handle the error here, e.g., display an error message to the user
+      // Optionally handle the error here
     }
   };
 
@@ -282,7 +279,6 @@ const TheoryExamPage = () => {
               })}
             />
 
-
             <div className="input-container">
               <input
                 className="form-control input_w my-2"
@@ -299,13 +295,13 @@ const TheoryExamPage = () => {
                 })}
               />
               {/* <span onClick={toggleInfo} className="info-icon">
-                // ℹ️
+                ℹ️
               </span> */}
             </div>
 
-            {/* {showInfo && ( */}
-            {/* <div className="info-message" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}> */}
-            {/* {t("addInfo")} */}
+            {/* {showInfo && (
+              <div className="info-message" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                {t("addInfo")} */}
             {/* <div className="app-icons" style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
                   <a href="https://play.google.com/store/apps/details?id=kz.gov4c.citizen&hl=ru&gl=US&pli=1" target="_blank" rel="noopener noreferrer">
                     <img src={googlePlay} alt="Google Play Store" style={{ width: '100px', height: 'auto' }} />
@@ -314,8 +310,8 @@ const TheoryExamPage = () => {
                     <img src={appStore} alt="App Store" style={{ width: '100px', height: 'auto' }} />
                   </a>
                 </div> */}
-            {/* </div> */}
-            {/* )} */}
+            {/* </div>
+            )} */}
 
             {/* <div className="input-container">
               <input
@@ -381,7 +377,7 @@ const TheoryExamPage = () => {
 
             {/* SUBMIT BUTTON */}
             <button
-              className="btn btn-success btn_auth my-3"
+              className="btn btn-success btn-auth my-3"
               type="submit"
               disabled={!isDirty || !isValid}
               onClick={() => setIsTextVisible(false)}
@@ -506,6 +502,14 @@ const TheoryExamPage = () => {
         setHasActiveTicket={setHasActiveTicket}
         examData={examData}
       />
+
+      {showModalError && (
+        <ModalErrorMessage
+          isOpen={showModalError}
+          onClose={() => setShowModalError(false)}
+          message={modalErrorMessage}
+        />
+      )}
 
     </div>
   );

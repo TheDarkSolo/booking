@@ -123,7 +123,7 @@ export default function TicketTrialExam() {
           <label className="my-2">
             <span className="ticket_text_aside">
               КПП: <span className="fw-bold">
-                <span className="fw-bold">{kpp == "MT" ? "МКПП" : "АКПП"}</span>
+                <span className="fw-bold">{kpp}</span>
               </span>
             </span>
           </label>
@@ -197,10 +197,12 @@ export default function TicketTrialExam() {
       </div >
       <br></br>
       <center>
-        <button onClick={downloadPdf} type="button" className="btn btn-success">
+        <button onClick={downloadPdf} type="button" className="btn btn-secondary" style={{marginRight: '1rem'}}>
           {t("talonPDF")}
           {/* Скачать PDF */}
         </button>
+
+        <button type="button" className="btn btn-success" onClick={() => window.location.href = 'https://booking.gov4c.kz/trial-exam'}> {t("trialReserveAgain")}</button>
       </center>
     </>
   );

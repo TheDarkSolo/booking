@@ -226,7 +226,7 @@ const TheoryExamForm = () => {
   };
 
   const postUserExamData = (user_exam_data) => {
-    navigate("/reservation/theory-exam/verification");
+    navigate("/theory-exam/verification");
   };
 
   useEffect(() => {
@@ -258,10 +258,12 @@ const TheoryExamForm = () => {
             {/*Выберите город*/}
             {t("selectCity")}
           </label>
-          <select className="form-select" id="city-select" onChange={(e) => onChangeCity(e.target.value)}>
-            {cities.map((city) => (
-              <option key={city.id} value={city.id} selected={city.name == userData.city}>{city.name}</option>
-            ))}
+          <select className="form-select" id="city-select"
+            onChange={(e) => onChangeCity(e.target.value)}
+          >
+            <option 
+            // key={city.id} value={city.id} 
+            >{userData.city}</option>
           </select>
         </div>
 
@@ -273,20 +275,20 @@ const TheoryExamForm = () => {
 
           </label>
           <select className="form-select" id="department-select" onChange={(e) => onChangeSelectDepartment(e.target.value)}>
-            <option selected disabled value="">
+            {/* <option selected disabled value="">
               {t("selectDepartment")}
-            </option>
-            {departments
+            </option> */}
+            {/* {departments
               .filter((department) => department.city == document.getElementById('city-select').value)
-              .map((department) => (
+              .map((department) => ( */}
                 <option
-                  key={department.id}
-                  value={department.id}
+                  // key={department.id}
+                  // value={department.id}
                 /*selected={department.id == userData.department_id}*/
                 >
-                  {department.name}
+                  {userData.department}
                 </option>
-              ))}
+              {/* ))} */}
 
           </select>
         </div>

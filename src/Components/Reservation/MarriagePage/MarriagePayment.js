@@ -94,7 +94,7 @@ function MarriagePayment() {
                 //APPLICANT NOT ENRLLED GET ERROR FROM SERVER
                 else if (res.status) {
                     sessionStorage.setItem("appNumber", JSON.stringify(res.app_number));
-                    navigate("/reservation/marriage/ticket");
+                    navigate("/marriage/ticket");
                 }
             })
             .catch(function (res) {
@@ -178,7 +178,7 @@ function MarriagePayment() {
                         <span>{ }</span>
                     </label>
                     {
-                        !isMobile ? (
+                        !isMobile ? ( //if pc
                             <div className="kaspi-qr-container">
                                 <div className="kaspi-qr-logo-text">
                                     <img src={qr_block_logo} alt="QR block logo" />
@@ -190,10 +190,11 @@ function MarriagePayment() {
                     }
 
                     {
-                        isMobile ? (user?.id && slotId ? (
+                        isMobile ? (user?.id && slotId ? ( //if mobile
                             <a href={`https://kaspi.kz/pay/RAGSOnline?service_id=8291&12835=${user?.id}&12836=${slotId}&13299=${user?.iin}&13300=${user?.fullname}`} target="_blank" rel="noopener noreferrer">
                                 <img src={kaspiMobile_kz} alt="Kaspi QR" style={{ width: '250px', height: 'auto' }} />
                             </a>)
+                            //if pc
                             : (<p> Loading... </p>)) :
                             qrCodeBase64 && <img src={`data:image/png;base64,${qrCodeBase64}`} alt="Kaspi QR" style={{ width: "250px", height: "auto" }} />
                     }
@@ -207,7 +208,7 @@ function MarriagePayment() {
                 </p> */}
 
                 <center>
-                    <button type="button" className="btn btn-danger my-4" onClick={() => window.location.href = 'https://booking.gov4c.kz/reservation/marriage'}>
+                    <button type="button" className="btn btn-danger my-4" onClick={() => window.location.href = 'https://booking.gov4c.kz/marriage'}>
                         {t("verificationDecline")}
                         {/* Отменить */}
                     </button>

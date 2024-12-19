@@ -1,18 +1,18 @@
-.offset_ticket_theory_exam{
+.offset_ticket_theory_exam {
     display: flex;
     width: 100%;
     padding: 5% 15% 0px;
     justify-content: center;
 }
 
-.ticket_text_aside{
+.ticket_text_aside {
     font-family: "Montserrat";
     font-size: 18px;
     line-height: 16px;
     font-weight: 500;
 }
 
-.ticket_info_block{
+.ticket_info_block {
     display: flex;
     flex-direction: column;
     height: 75%;
@@ -22,29 +22,12 @@
 /* Default styles for larger screens */
 .ticket {
     width: 50%;
-  }
-  
-  /* Media query for smaller screens, e.g., max-width: 768px for tablets */
-  @media (max-width: 768px) {
+}
+
+/* Media query for smaller screens, e.g., max-width: 768px for tablets */
+@media (max-width: 768px) {
     .ticket {
-      width: 99%; /* Adjust the width as needed for mobile */
-    }
-  }
-
-@media (max-width: 992px) {
-    .offset_ticket_theory_exam{
-        padding: 2% 5% 0px;
+        width: 99%;
+        /* Adjust the width as needed for mobile */
     }
 }
-
-
-@media (max-width: 576px) {
-    .offset_ticket_theory_exam{
-        padding: 0 2%;
-    }
-
-    .ticket_info_block{
-        width: 100%;
-    }
-}
-

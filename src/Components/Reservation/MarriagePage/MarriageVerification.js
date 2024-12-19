@@ -66,7 +66,7 @@ function MarriageVerification() {
                 //IF APPLICANT ENROLLED TO PRACTICE EXAM
                 if (res.enrolled) {
                     console.log("Enrolled:", res.enrolled);
-                    navigate("/reservation/marriage/payment");
+                    navigate("/marriage/payment");
 
                 }
                 //APPLICANT NOT ENRLLED GET ERROR FROM SERVER

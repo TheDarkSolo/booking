@@ -27,6 +27,8 @@ import { setDataUser } from "../../../store/slices/userDataSlice";
 //ICON
 import { IoIosArrowBack } from "react-icons/io";
 
+import ModalErrorMessage from "../../Modal/ModalErrorMessage";
+
 //API REQUEST FUNCTION
 import {
   verifyUserByIIN,
@@ -85,6 +87,9 @@ const TrialExamPage = () => {
   const currentLanguage = getCurrentLanguage();
 
   const [isAgreed, setIsAgreed] = React.useState(false);
+
+  const [modalErrorMessage, setModalErrorMessage] = useState("");
+  const [showModalError, setShowModalError] = useState(false);
 
   const toggleInfo = () => {
     setShowInfo(!showInfo);
@@ -163,67 +168,49 @@ const TrialExamPage = () => {
   const sendVerifyCodeApplicant = async (verify_code, token) => {
     const url = "/api/trial/verify/"
 
-    const storageData = sessionStorage.getItem("iin");
+    const storageData = JSON.parse(sessionStorage.getItem("iin"));
 
-    const obj = {
-      "iin": JSON.parse(storageData),
-      "code": verify_code,
-    }
-
-    let myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
-
-    let raw = JSON.stringify({
-      iin: JSON.parse(storageData),
-      code: verify_code
-    });
-
-
-    fetch(url, {
-      headers: myHeaders,
+    const requestOptions = {
       method: "POST",
-      body: raw
-    }).then((response) => {
-      if (response.ok) {
-        return response.json();
-      }
-      else {
-        setResponseError(true);
-        throw new Error(`INITIAL Request failed with status code ${response.status}`);
-      }
-    })
-      .then((data) => {
-        if (data.error) {
-          //SHOW ERROR IF APPLICANT NOT PASS THEORY EXAM
-          // setIsVerify(true)
-          if (data.error == "Заявитель не сдал теоретический экзамен") {
-            setMessageBlock(false);
-            setNotPassExam(true);
-            setOTP("");	
-          }
-        }
-        //APLICANT INPUT WRONG VERIFY CODE
-        else if (data.error === false) {
-          //SHOW ERROR APPLICANT INPUT WRONG VERIFY CODE
-          setMessageBlock(true);
-          setIsWrongCode(true);
-          setOTP("");
-        }
-        //OK
-        else {
-          setNotPassExam(false);
-          setIsVerify(true);
-          dispatch(setDataUser(data));
-          setMessageBlock(false);
-          setOTP("");
-        }
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        iin: storageData,
+        code: verify_code,
+      }),
+    };
 
-        // } 
-      })
-    /*.catch(function (res) {
-      console.log(res,'\texcept');
-      return res
-    });*/
+    try {
+      const response = await fetch(url, requestOptions);
+
+      if (!response.ok) {
+        throw new Error(`Request failed with status code ${response.status}`);
+      }
+
+      const data = await response.json();
+
+      if (data.error === false) {
+        // Handle case where applicant input wrong verify code
+        setMessageBlock(true);
+        setIsWrongCode(true);
+        setOTP("");
+      } else if (data.error) {
+        // Show the backend response in a modal window
+        setModalErrorMessage(data.error);
+        setShowModalError(true);
+      } else {
+        // Handle success case
+        setNotPassExam(false);
+        setIsVerify(true);
+        dispatch(setDataUser(data));
+        setMessageBlock(false);
+        setOTP("");
+      }
+    } catch (error) {
+      console.error("An error occurred during verification:", error);
+      // Optionally handle the error here
+    }
   };
 
   // IF THE TIMER IS OUT OF TIME TOOGLE DISABLED BUTTON "Забронировать"
@@ -243,7 +230,7 @@ const TrialExamPage = () => {
   //SUBMIT - SEND IIN AND GET VERIFY CODE
   const getMessage = (data) => {
     verifyUser(
-      data.IIN, 
+      data.IIN,
       //data.APP_NUMBER, 
       token.access);
   };
@@ -318,7 +305,7 @@ const TrialExamPage = () => {
                 type="checkbox"
                 checked={isAgreed}
                 onChange={() => setIsAgreed(!isAgreed)}
-                style={{ marginRight: '10px', width: '22px'}} // Adjust as needed
+                style={{ marginRight: '10px', width: '22px' }} // Adjust as needed
 
               />
               {currentLanguage === 'ru' ? (
@@ -518,6 +505,14 @@ const TrialExamPage = () => {
         setHasActiveTicket={setHasActiveTicket}
         examData={examData} // Pass the examData prop here
       />
+
+      {showModalError && (
+        <ModalErrorMessage
+          isOpen={showModalError}
+          onClose={() => setShowModalError(false)}
+          message={modalErrorMessage}
+        />
+      )}
 
     </div>
   );

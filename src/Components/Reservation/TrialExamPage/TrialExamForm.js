@@ -374,7 +374,7 @@ const TrialExamForm = () => {
   // };
 
   const postUserExamData = (user_exam_data) => {
-    navigate("/reservation/trial-exam/verification");
+    navigate("/trial-exam/verification");
   };
 
   useEffect(() => {
@@ -643,13 +643,13 @@ const TrialExamForm = () => {
                 {t("winterSMS")}
               </p>
 
-              <button className="btn btn-danger mx-5" onClick={() => navigate(-2)}>{/* Отмена */}{t("cancel")}</button>
+              <button className="btn btn-danger" onClick={() => navigate(-2)}>{/* Отмена */}{t("cancel")}</button>
 
               <button
-                className="btn btn-success mx-5"
+                className="btn btn-success"
                 type="submit"
                 disabled={selectedTimes.length === 0}>
-                {/* Подтвердить */} 
+                {/* Подтвердить */}
                 {t("approve")}
               </button>
             </div>

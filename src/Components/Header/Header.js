@@ -19,7 +19,7 @@ const Header = () => {
     setIsLoading(true)
     setTimeout(() => {
       setIsLoading(false)
-    },300)
+    }, 300)
   }
 
   return (
@@ -28,9 +28,9 @@ const Header = () => {
         <Link to="/">
           <img className="logo" src={logo} alt="logo" />
         </Link>
-        <select class="form-select form-select-lg" style={{width: '100px'}} aria-label="Default select example" onChange={(e) => onChangeLang(e.target.value)}>
+        <select className="form-select form-select-lg" defaultValue={"ru"} style={{ width: '100px' }} aria-label="Default select example" onChange={(e) => onChangeLang(e.target.value)}>
           <option value="kz">Қаз</option>
-          <option value="ru" selected>Рус</option>
+          <option value="ru" >Рус</option>
         </select>
         {/* <div className="lang">
           <span className="lang_text" onClick={(e) => onChangeLang('kz')} >КАЗ</span>
@@ -38,7 +38,7 @@ const Header = () => {
         </div> */}
       </div>
       {
-        isLoading && <ModalLoading isLoading={isLoading}/>
+        isLoading && <ModalLoading isLoading={isLoading} />
       }
     </div>
   );
